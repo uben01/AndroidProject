@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: scan database (one query) and distribute info
         for (int i = 0; i < 10; i++) {
-            final int id = i;   // TODO: DELETE ME
+            final Integer item_ID = i;   // TODO: DELETE ME
             LinearLayout outer      = new LinearLayout(this);
             ConstraintLayout inner  = new ConstraintLayout(this);
             ImageView icon          = new ImageView(this);
@@ -78,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
             outer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // TODO: provide additional informations, if needed
                     Intent intent = new Intent(gThis, TableOfContents.class);
+                    intent.putExtra("ID", item_ID.toString());
+
+                    startActivity(intent);
                 }
             });
         }
