@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         // TODO: átnézni
         int screenWidth = displayMetrics.widthPixels;
         int elementCount = (int) Math.floor(screenWidth / 220.0);
-        int remainder = screenWidth - (elementCount * 200);
-        remainder = (int)(remainder / (elementCount + 1.0));
+        int margin = screenWidth - (elementCount * 200);
+        margin = (int)(margin / (elementCount + 1.0));
 
         GridLayout layout = findViewById(R.id.langContainer);
         layout.setColumnCount(elementCount);
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             // Outer
             LinearLayout.LayoutParams outerParams = new LinearLayout.LayoutParams(200, 300);
             outer.setOrientation(LinearLayout.VERTICAL);
-            outerParams.setMargins(remainder, 10, 0,10);
+            outerParams.setMargins(margin, 10, 0,10);
             outer.setLayoutParams(outerParams);
 
             // Inner
@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
             layout.addView(outer);
 
             // Listener
-            // TODO: Implement listener
             outer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -1,6 +1,7 @@
 package utobe.learn2code;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,16 +15,17 @@ import java.util.List;
 public class TableOfContentAdapter extends
         RecyclerView.Adapter<TableOfContentAdapter.ViewHolder> {
 
-    private List<Language.Element> langElements;
+    private List<Language.Topic> langTopics;
+    private Context context;
 
-    public TableOfContentAdapter(List<Language.Element> elements) {
-        langElements = elements;
+    public TableOfContentAdapter(List<Language.Topic> topics) {
+        langTopics = topics;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        Context context = viewGroup.getContext();
+        context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -35,21 +37,30 @@ public class TableOfContentAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         // Get the data model based on position
-        Language.Element element = langElements.get(i);
+        Language.Topic topic = langTopics.get(i);
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
-        textView.setText(element.getName());
+        textView.setText(topic.getName());
         Button button = viewHolder.messageButton;
-        button.setText(element.isUnlocked() ? "Start!" : "Not yet unlocked");
-        button.setEnabled(element.isUnlocked());
+        button.setText(topic.isUnlocked() ? "Start!" : "Not yet unlocked");
+        button.setEnabled(topic.isUnlocked());
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TopicActivity.class);
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return langElements.size();
+        return langTopics.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
