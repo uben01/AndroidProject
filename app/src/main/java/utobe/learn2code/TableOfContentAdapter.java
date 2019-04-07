@@ -43,7 +43,7 @@ public class TableOfContentAdapter extends
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
-        textView.setText(topic.getName());
+        textView.setText(topic.getTitle());
         Button button = viewHolder.messageButton;
         button.setText(topic.isUnlocked() ? "Start!" : "Not yet unlocked");
         button.setEnabled(topic.isUnlocked());

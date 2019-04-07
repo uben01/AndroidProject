@@ -20,11 +20,11 @@ public class TableOfContents extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        Language l = new Language();
+        // Language l = new Language();
         list = findViewById(R.id.table);
 
-        mAdapter = new TableOfContentAdapter(l.getElements());
-        list.setAdapter(mAdapter);
+        //  mAdapter = new TableOfContentAdapter(l.getElements());
+        //   list.setAdapter(mAdapter);
 
         list.setLayoutManager(new LinearLayoutManager(this));
 

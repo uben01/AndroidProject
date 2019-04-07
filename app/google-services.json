@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "767763021010",
+    "firebase_url": "https://learn2code-96ec4.firebaseio.com",
+    "project_id": "learn2code-96ec4",
+    "storage_bucket": "learn2code-96ec4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767763021010:android:66ded4995213b730",
+        "android_client_info": {
+          "package_name": "utobe.learn2code"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3kslEX-E1pk0ItEzOhbhy7rnBrmzdIt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767763021010-1ga52ktk3dajgaim3512700l7jc101l3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,32 +1,40 @@
 package utobe.learn2code;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 public class Language {
     private String id;
     private String name;
-    private Bitmap icon;
-    private ArrayList<Topic> topics;
+    private String iconRef;
+    private volatile ArrayList<Topic> topics = new ArrayList<>();
 
     public class Topic {
         private String id;
-        private String name;
+        private String title;
         private Boolean isTest;
         private ArrayList<Page> pages;
+        private String parent;
 
-        public Topic(String _name)
+        public Topic(QueryDocumentSnapshot document)
         {
-            name = _name;
+            id = document.getId();
+            title = document.getString("name");
+            isTest = document.getBoolean("isTest");
+            parent = document.getString("parent");
+
             pages = new ArrayList<>();
         }
 
-        public String getName() {
-            return name;
+        public String getTitle() {
+            return title;
         }
 
         public Boolean isUnlocked() {
@@ -54,15 +62,7 @@ public class Language {
                 return text;
             }
         }
-    }
 
-    public Language(String _id, Context context)
-    {
-        id = _id;
-
-        // get others from DB by ID
-        name = "C++";
-        icon = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_cpp);
 
     }
 
@@ -80,24 +80,48 @@ public class Language {
     public String getName() {
         return name;
     }
-    public Bitmap getIcon() {
-        return icon;
+
+    public String getIconRef() {
+        return iconRef;
     }
 
-    public Language() {
-        topics = new ArrayList<Topic>();
-        topics.add(new Topic("A"));
-        topics.add(new Topic("B"));
-        topics.add(new Topic("C"));
-        topics.add(new Topic("D"));
+    public Language(QueryDocumentSnapshot document, Boolean b_buildTopicks) {
+        id = document.getId();
+        name = document.getString("name");
+        iconRef = document.getDocumentReference("icon").getPath();
+
+        if (b_buildTopicks)
+            buildTopicks();
     }
 
-    // TODO: Innen lehessen példányt kérni, minden más constructor private
-    public Language getLanguageFromDatabase(String id)
+    public void buildTopicks()
     {
-        Language lan = new Language();
+        ServiceFactory.getFirebaseFirestore().collection("topics")
+                .whereEqualTo("parent", this.id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Topic topic = new Topic(document);
+                                topics.add(topic);
+                                Log.i("ASDA", topics.size() + "");
+                            }
+                        } else {
+                            Log.w("ASD", "hiba");
+                        }
+                    }
+                });
+    }
 
-        return lan;
+    public static ArrayList<Language> buildLanguages(QuerySnapshot documents) {
+        ArrayList<Language> languages = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            languages.add(new Language(document, false));
+        }
+
+        return languages;
     }
 
 }
