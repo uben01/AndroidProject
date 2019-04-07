@@ -8,17 +8,8 @@ import java.util.ArrayList;
 import utobe.learn2code.enititymanager.EntityManager;
 
 public class Language extends AbstractEntity {
-    private String name;
-    private String iconRef;
-    private volatile ArrayList<Topic> topics = new ArrayList<>();
-
-    public Topic getElementAtIndex(int index) {
-        return topics.get(index);
-    }
-
-    public ArrayList<Topic> getElements() {
-        return topics;
-    }
+    private final String name;
+    private final String iconRef;
 
     public String getName() {
         return name;
@@ -28,7 +19,7 @@ public class Language extends AbstractEntity {
         return iconRef;
     }
 
-    public Language(QueryDocumentSnapshot document) {
+    private Language(QueryDocumentSnapshot document) {
         super(document.getId());
         name = document.getString("name");
         iconRef = document.getDocumentReference("icon").getPath();

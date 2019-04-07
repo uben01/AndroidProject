@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -18,14 +19,13 @@ import utobe.learn2code.R;
 import utobe.learn2code.adapter.LanguageSelectAdapter;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.util.MyCallback;
-import utobe.learn2code.util.ServiceFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Activity gThis = this;
+    private final Activity gThis = this;
 
-    public void readData(final MyCallback myCallback) {
-        ServiceFactory.getFirebaseFirestore().collection("languages")
+    private void readData(final MyCallback myCallback) {
+        FirebaseFirestore.getInstance().collection("languages")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setClickListener(new LanguageSelectAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(gThis, TableOfContents.class);
+                        Intent intent = new Intent(gThis, TableOfContentsActivity.class);
                         intent.putExtra("ID", adapter.getItem(position));
 
                         startActivity(intent);

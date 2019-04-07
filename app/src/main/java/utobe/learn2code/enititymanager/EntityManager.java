@@ -6,7 +6,7 @@ import utobe.learn2code.model.AbstractEntity;
 
 public class EntityManager {
     private static EntityManager em = null;
-    private HashMap<String, AbstractEntity> mEntities = new HashMap<>();
+    private final HashMap<String, AbstractEntity> mEntities = new HashMap<>();
 
     public static EntityManager getInstance() {
         if (em == null)

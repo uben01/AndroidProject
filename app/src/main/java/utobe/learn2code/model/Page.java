@@ -6,8 +6,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import utobe.learn2code.enititymanager.EntityManager;
 
 public class Page extends AbstractEntity {
-    private String title;
-    private String text;
+    private final String title;
+    private final String text;
 
     private Page(QueryDocumentSnapshot document) {
         super(document.getId());

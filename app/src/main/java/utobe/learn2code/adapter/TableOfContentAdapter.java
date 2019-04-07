@@ -19,7 +19,7 @@ import utobe.learn2code.model.Topic;
 public class TableOfContentAdapter extends
         RecyclerView.Adapter<TableOfContentAdapter.ViewHolder> {
 
-    private List<Topic> langTopics;
+    private final List<Topic> langTopics;
     private Context context;
 
     public TableOfContentAdapter(List<Topic> topics) {
@@ -36,8 +36,7 @@ public class TableOfContentAdapter extends
         View contactView = inflater.inflate(R.layout.item_table_of_contents, viewGroup, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
     @Override
@@ -67,11 +66,11 @@ public class TableOfContentAdapter extends
         return langTopics.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameTextView;
-        public Button messageButton;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameTextView;
+        final Button messageButton;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);

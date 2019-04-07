@@ -9,10 +9,10 @@ import android.util.Log;
 
 import utobe.learn2code.R;
 
-public class TableOfContents extends AppCompatActivity {
+public class TableOfContentsActivity extends AppCompatActivity {
 
-    RecyclerView list;
-    RecyclerView.Adapter mAdapter;
+    private RecyclerView list;
+    private RecyclerView.Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import utobe.learn2code.enititymanager.EntityManager;
 
 public class Topic extends AbstractEntity {
-    private String title;
-    private Boolean isTest;
-    private ArrayList<Page> pages;
-    private String parent;
+    private final String title;
+    private final Boolean isTest;
+    private final ArrayList<Page> pages;
+    private final String parent;
 
     private Topic(QueryDocumentSnapshot document) {
         super(document.getId());

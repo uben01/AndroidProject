@@ -1,7 +1,7 @@
 package utobe.learn2code.model;
 
 public abstract class AbstractEntity {
-    String id;
+    private final String id;
 
     AbstractEntity(String id) {
         this.id = id;

@@ -12,18 +12,18 @@ import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGImageView;
 import com.caverock.androidsvg.SVGParseException;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
 import utobe.learn2code.model.Language;
-import utobe.learn2code.util.ServiceFactory;
 
 public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAdapter.ViewHolder> {
 
-    private ArrayList<Language> mData;
-    private LayoutInflater mInflater;
+    private final ArrayList<Language> mData;
+    private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
@@ -44,7 +44,7 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.myTextView.setText(mData.get(position).getName());
-        ServiceFactory.getFirebaseStorage().getReference(mData.get(position).getIconRef()).getBytes(1024 * 20).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        FirebaseStorage.getInstance().getReference(mData.get(position).getIconRef()).getBytes(1024 * 20).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 try {
@@ -66,8 +66,8 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
-        SVGImageView myImageView;
+        final TextView myTextView;
+        final SVGImageView myImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
