@@ -1,4 +1,4 @@
-package utobe.learn2code;
+package utobe.learn2code.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import utobe.learn2code.R;
+import utobe.learn2code.adapter.LanguageSelectAdapter;
+import utobe.learn2code.model.Language;
+import utobe.learn2code.util.MyCallback;
+import utobe.learn2code.util.ServiceFactory;
 
 public class MainActivity extends AppCompatActivity {
 

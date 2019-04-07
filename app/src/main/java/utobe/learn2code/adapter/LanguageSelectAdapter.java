@@ -1,4 +1,4 @@
-package utobe.learn2code;
+package utobe.learn2code.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,6 +16,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import utobe.learn2code.R;
+import utobe.learn2code.model.Language;
+import utobe.learn2code.util.ServiceFactory;
+
 public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAdapter.ViewHolder> {
 
     private ArrayList<Language> mData;
@@ -23,7 +27,7 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    LanguageSelectAdapter(Context context, ArrayList<Language> data) {
+    public LanguageSelectAdapter(Context context, ArrayList<Language> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -79,12 +83,12 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    public String getItem(int id) {
         return mData.get(id).getId();
     }
 
     // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
+    public void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 

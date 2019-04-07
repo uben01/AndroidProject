@@ -1,4 +1,4 @@
-package utobe.learn2code;
+package utobe.learn2code.util;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;

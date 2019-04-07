@@ -1,4 +1,4 @@
-package utobe.learn2code;
+package utobe.learn2code.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +12,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import utobe.learn2code.R;
+import utobe.learn2code.activity.TopicActivity;
+import utobe.learn2code.model.Topic;
+
 public class TableOfContentAdapter extends
         RecyclerView.Adapter<TableOfContentAdapter.ViewHolder> {
 
-    private List<Language.Topic> langTopics;
+    private List<Topic> langTopics;
     private Context context;
 
-    public TableOfContentAdapter(List<Language.Topic> topics) {
+    public TableOfContentAdapter(List<Topic> topics) {
         langTopics = topics;
     }
 
@@ -39,7 +43,7 @@ public class TableOfContentAdapter extends
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         // Get the data model based on position
-        Language.Topic topic = langTopics.get(i);
+        Topic topic = langTopics.get(i);
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;

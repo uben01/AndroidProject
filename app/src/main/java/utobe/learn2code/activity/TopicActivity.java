@@ -1,4 +1,4 @@
-package utobe.learn2code;
+package utobe.learn2code.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import utobe.learn2code.R;
 
 public class TopicActivity extends AppCompatActivity {
 

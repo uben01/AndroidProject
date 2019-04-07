@@ -1,4 +1,4 @@
-package utobe.learn2code;
+package utobe.learn2code.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+
+import utobe.learn2code.R;
 
 public class TableOfContents extends AppCompatActivity {
 
