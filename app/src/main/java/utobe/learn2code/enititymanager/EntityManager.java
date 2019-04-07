@@ -19,7 +19,11 @@ public class EntityManager {
         mEntities.put(entity.getId(), entity);
     }
 
-    public AbstractEntity getEntity(String id) {
-        return mEntities.get(id);
+    public AbstractEntity getEntity(String navProperty) {
+        return mEntities.get(navProperty);
+    }
+
+    public Integer getSize() {
+        return mEntities.size();
     }
 }

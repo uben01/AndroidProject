@@ -18,23 +18,10 @@ import java.util.ArrayList;
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.LanguageSelectAdapter;
 import utobe.learn2code.model.Language;
-import utobe.learn2code.util.MyCallback;
 
 public class MainActivity extends AppCompatActivity {
 
     private final Activity gThis = this;
-
-    private void readData(final MyCallback myCallback) {
-        FirebaseFirestore.getInstance().collection("languages")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Language> languages = Language.buildLanguages(queryDocumentSnapshots);
-                        myCallback.onCallback(languages);
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,26 +33,32 @@ public class MainActivity extends AppCompatActivity {
         float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
         final int elementCount = (int) Math.floor(screenWidth / 110.0);
 
-        readData(new MyCallback() {
-            @Override
-            public void onCallback(ArrayList<Language> languages) {
-                final LanguageSelectAdapter adapter;
-                RecyclerView view = findViewById(R.id.langContainer);
-                view.setLayoutManager(new GridLayoutManager(gThis, elementCount));
 
-                adapter = new LanguageSelectAdapter(gThis, languages);
-                adapter.setClickListener(new LanguageSelectAdapter.ItemClickListener() {
+        FirebaseFirestore.getInstance().collection("languages")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(gThis, TableOfContentsActivity.class);
-                        intent.putExtra("ID", adapter.getItem(position));
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<Language> languages = Language.buildLanguages(queryDocumentSnapshots);
 
-                        startActivity(intent);
+                        final LanguageSelectAdapter adapter;
+                        RecyclerView view = findViewById(R.id.langContainer);
+                        view.setLayoutManager(new GridLayoutManager(gThis, elementCount));
+
+                        adapter = new LanguageSelectAdapter(gThis, languages);
+                        adapter.setClickListener(new LanguageSelectAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(gThis, TableOfContentsActivity.class);
+                                intent.putExtra("id", adapter.getItem(position).getId());
+                                intent.putExtra("name", adapter.getItem(position).getName());
+
+                                startActivity(intent);
+                            }
+                        });
+                        view.setAdapter(adapter);
                     }
                 });
-                view.setAdapter(adapter);
-            }
-        });
     }
 }
 

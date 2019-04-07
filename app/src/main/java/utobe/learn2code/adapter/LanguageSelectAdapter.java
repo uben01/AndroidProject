@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import utobe.learn2code.R;
 import utobe.learn2code.model.Language;
 
-public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAdapter.ViewHolder> {
+public class LanguageSelectAdapter extends
+        RecyclerView.Adapter<LanguageSelectAdapter.ViewHolder> {
 
     private final ArrayList<Language> mData;
     private final LayoutInflater mInflater;
@@ -83,8 +84,8 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mData.get(id).getId();
+    public Language getItem(int id) {
+        return mData.get(id);
     }
 
     // allows clicks events to be caught

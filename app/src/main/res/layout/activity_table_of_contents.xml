@@ -7,7 +7,7 @@
     tools:context=".activity.TableOfContentsActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/table"
+        android:id="@+id/topicsTable"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         app:layout_constraintBottom_toBottomOf="parent"

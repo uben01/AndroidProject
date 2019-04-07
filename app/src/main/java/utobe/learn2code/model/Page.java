@@ -3,8 +3,6 @@ package utobe.learn2code.model;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import utobe.learn2code.enititymanager.EntityManager;
-
 public class Page extends AbstractEntity {
     private final String title;
     private final String text;
@@ -25,7 +23,6 @@ public class Page extends AbstractEntity {
 
     public Page buildPage(QueryDocumentSnapshot document) {
         Page page = new Page(document);
-        EntityManager.getInstance().addEntity(page);
 
         return page;
     }
