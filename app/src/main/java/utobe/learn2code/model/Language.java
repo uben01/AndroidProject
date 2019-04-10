@@ -6,22 +6,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class Language extends AbstractEntity {
-    private final String name;
-    private final String iconRef;
+    private String name;
+    private String icon;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getIconRef() {
-        return iconRef;
-    }
-
+    public Language(){}
 
     private Language(QueryDocumentSnapshot document) {
         super(document.getId());
         name = document.getString("name");
-        iconRef = document.getDocumentReference("icon").getPath();
+        icon = document.getDocumentReference("icon").getPath();
     }
 
     public static ArrayList<Language> buildLanguages(QuerySnapshot documents) {
@@ -34,4 +27,11 @@ public class Language extends AbstractEntity {
         return languages;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
 }

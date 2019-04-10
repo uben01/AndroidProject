@@ -20,12 +20,14 @@ public class TableOfContentAdapter extends
 
     private final ArrayList<Topic> mData;
     private final LayoutInflater mInflater;
+    private final Context context;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
     public TableOfContentAdapter(Context context, ArrayList<Topic> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.context = context;
     }
 
     // inflates the cell layout from xml when needed
@@ -40,8 +42,12 @@ public class TableOfContentAdapter extends
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.myTextView.setText(mData.get(position).getTitle());
-        holder.myButton.setText(mData.get(position).isUnlocked() ? "Go!" : "Not yet unlocked");
-        holder.myButton.setClickable(mData.get(position).isUnlocked());
+        holder.myButton.setText(
+                        (mData.get(position).getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
+        );
+
+        holder.myButton.setClickable(!mData.get(position).getUnlocked());
+        // Bugosnak tűnik. Ha true, akkor nem kattintható, ha false, akkor igen...
     }
 
     // total number of cells

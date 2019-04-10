@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.List;
 
 import utobe.learn2code.R;
 import utobe.learn2code.model.Language;
@@ -23,12 +23,12 @@ import utobe.learn2code.model.Language;
 public class LanguageSelectAdapter extends
         RecyclerView.Adapter<LanguageSelectAdapter.ViewHolder> {
 
-    private final ArrayList<Language> mData;
+    private final List<Language> mData;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public LanguageSelectAdapter(Context context, ArrayList<Language> data) {
+    public LanguageSelectAdapter(Context context, List<Language> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -44,18 +44,21 @@ public class LanguageSelectAdapter extends
     // binds the data to the TextView in each cell
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+
         holder.myTextView.setText(mData.get(position).getName());
-        FirebaseStorage.getInstance().getReference(mData.get(position).getIconRef()).getBytes(1024 * 20).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                try {
-                    SVG svg = SVG.getFromString(new String(bytes, StandardCharsets.UTF_8));
-                    holder.myImageView.setSVG(svg);
-                } catch (SVGParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        FirebaseStorage.getInstance().getReference(mData.get(position).getIcon())
+                .getBytes(1024 * 5)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        try {
+                            SVG svg = SVG.getFromString(new String(bytes, StandardCharsets.UTF_8));
+                            holder.myImageView.setSVG(svg);
+                        } catch (SVGParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     // total number of cells

@@ -46,13 +46,17 @@ public class TableOfContentsActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
 
-                        final TableOfContentAdapter adapter;
                         mAdapter = new TableOfContentAdapter(gThis, topics);
-
                         mAdapter.setClickListener(new TableOfContentAdapter.ItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
+                                Topic selected = mAdapter.getItem(position);
 
+                                Intent intent = new Intent(gThis, TopicActivity.class);
+                                intent.putExtra("language", selected.getParent());
+                                intent.putExtra("topic", selected.getId());
+
+                                startActivity(intent);
                             }
                         });
 
