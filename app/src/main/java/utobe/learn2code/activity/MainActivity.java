@@ -3,17 +3,12 @@ package utobe.learn2code.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.caverock.androidsvg.SVGImageView;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,36 +34,6 @@ public class MainActivity extends AppCompatActivity {
         final int elementCount = (int) Math.floor(screenWidth / 110.0);
 
         final RecyclerView view = findViewById(R.id.langContainer);
-
-        FirestoreRecyclerAdapter adapter = new FirestoreRecyclerAdapter<Language>() {
-            @NonNull
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                return null;
-            }
-
-
-            LanguageSelectAdapter.ItemClickListener mClickListener;
-
-            class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-                final TextView myTextView;
-                final SVGImageView myImageView;
-
-                ViewHolder(View itemView) {
-                    super(itemView);
-                    myTextView = itemView.findViewById(R.id.langItemTitle);
-                    myImageView = itemView.findViewById(R.id.langItemIcon);
-                    itemView.setOnClickListener(this);
-                }
-
-                @Override
-                public void onClick(View view) {
-                    if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-                }
-            }
-
-
-        }
 
         FirebaseFirestore.getInstance().collection("languages")
                 .get()

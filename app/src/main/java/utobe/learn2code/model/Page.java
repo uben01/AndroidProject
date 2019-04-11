@@ -2,6 +2,9 @@ package utobe.learn2code.model;
 
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class Page extends AbstractEntity {
     private String title;
@@ -17,13 +20,17 @@ public class Page extends AbstractEntity {
         text = document.getString("text");
         parent = document.getString("parent");
 
-        serialNumber = document.getLong("text");
+        serialNumber = document.getLong("serialNumber");
     }
 
-    public Page buildPage(QueryDocumentSnapshot document) {
-        Page page = new Page(document);
+    public static ArrayList<Page> buildPages(QuerySnapshot documents) {
+        ArrayList<Page> pages = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            Page page = new Page(document);
+            pages.add(page);
+        }
 
-        return page;
+        return pages;
     }
 
     public String getTitle() {
