@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TableOfContentAdapter;
@@ -30,6 +31,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_table_of_contents);
 
         Intent intent = getIntent();
@@ -45,6 +47,13 @@ public class TableOfContentsActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
+
+                        topics.sort(new Comparator<Topic>() {
+                            @Override
+                            public int compare(Topic o1, Topic o2) {
+                                return o1.getSerialNumber().compareTo(o2.getSerialNumber());
+                            }
+                        });
 
                         mAdapter = new TableOfContentAdapter(gThis, topics);
                         mAdapter.setClickListener(new TableOfContentAdapter.ItemClickListener() {

@@ -6,12 +6,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class Topic extends AbstractEntity {
-    private String title;
-    private Boolean isTest;
-    private Boolean isUnlocked;
-    private String parent;
-
-    public Topic(){};
+    private final String title;
+    private final Boolean isTest;
+    private final Boolean isUnlocked;
+    private final String parent;
+    private final Long serialNumber;
 
     private Topic(QueryDocumentSnapshot document) {
         super(document.getId());
@@ -19,6 +18,7 @@ public class Topic extends AbstractEntity {
         isTest = document.getBoolean("isTest");
         parent = document.getString("parent");
         isUnlocked = document.getBoolean("isUnlocked");
+        serialNumber = document.getLong("serialNumber");
     }
 
     public static ArrayList<Topic> buildTopics(QuerySnapshot documents) {
@@ -47,4 +47,7 @@ public class Topic extends AbstractEntity {
         return parent;
     }
 
+    public Long getSerialNumber() {
+        return serialNumber;
+    }
 }
