@@ -9,16 +9,18 @@ import utobe.learn2code.fragment.PageFragment;
 import utobe.learn2code.model.Page;
 
 public class TopicAdapter extends SmartFragmentStatePagerAdapter {
-    ArrayList<Page> pages;
+    private final ArrayList<Page> pages;
+    private final boolean isTest;
 
-    public TopicAdapter(FragmentManager fm, ArrayList<Page> pages) {
+    public TopicAdapter(FragmentManager fm, ArrayList<Page> pages, boolean isTest) {
         super(fm);
         this.pages = pages;
+        this.isTest = isTest;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position + 1, pages.get(position).getId());
+        return PageFragment.newInstance(pages.get(position).getId(), isTest);
     }
 
     @Override

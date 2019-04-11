@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -12,12 +13,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Objects;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TopicAdapter;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Page;
+import utobe.learn2code.model.TestPage;
 import utobe.learn2code.model.Topic;
 
 public class TopicActivity extends AppCompatActivity {
@@ -30,6 +33,7 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_topic);
 
         Intent intent = getIntent();
@@ -44,7 +48,13 @@ public class TopicActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Page> pages = Page.buildPages(queryDocumentSnapshots);
+                        ArrayList<Page> pages = new ArrayList<>();
+                        if (!topic.getTest()) {
+                            pages.addAll(Page.buildPages(queryDocumentSnapshots));
+                        } else {
+                            pages.addAll(TestPage.buildTestPages(queryDocumentSnapshots));
+                        }
+
                         pages.sort(new Comparator<Page>() {
                             @Override
                             public int compare(Page o1, Page o2) {
@@ -55,7 +65,7 @@ public class TopicActivity extends AppCompatActivity {
                         // Set up the ViewPager with the sections adapter.
                         mViewPager = findViewById(R.id.container);
 
-                        mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages);
+                        mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages, topic.getTest());
                         mViewPager.setAdapter(mTopicAdapter);
 
                         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -66,8 +76,9 @@ public class TopicActivity extends AppCompatActivity {
 
                             @Override
                             public void onPageSelected(int i) {
-                                if (mViewPager.getAdapter().getCount() == i) {
+                                if (Objects.requireNonNull(mViewPager.getAdapter()).getCount() - 1 == i) {
                                     // last page
+                                    Log.i("ASD", "last");
                                 }
                             }
 

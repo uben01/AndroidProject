@@ -9,8 +9,6 @@ public class Language extends AbstractEntity {
     private String name;
     private String icon;
 
-    public Language(){}
-
     private Language(QueryDocumentSnapshot document) {
         super(document.getId());
         name = document.getString("name");

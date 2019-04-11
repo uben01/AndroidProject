@@ -20,14 +20,12 @@ public class TableOfContentAdapter extends
 
     private final ArrayList<Topic> mData;
     private final LayoutInflater mInflater;
-    private final Context context;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
     public TableOfContentAdapter(Context context, ArrayList<Topic> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
-        this.context = context;
     }
 
     // inflates the cell layout from xml when needed
@@ -47,7 +45,6 @@ public class TableOfContentAdapter extends
         );
 
         holder.myButton.setClickable(!mData.get(position).getUnlocked());
-        // Bugosnak tűnik. Ha true, akkor nem kattintható, ha false, akkor igen...
     }
 
     // total number of cells

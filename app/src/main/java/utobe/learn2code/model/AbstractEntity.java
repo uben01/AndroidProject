@@ -3,9 +3,7 @@ package utobe.learn2code.model;
 import utobe.learn2code.enititymanager.EntityManager;
 
 public abstract class AbstractEntity {
-    private String id;
-
-    public AbstractEntity(){};
+    private final String id;
 
     AbstractEntity(String id) {
         this.id = id;

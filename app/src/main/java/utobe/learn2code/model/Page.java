@@ -7,14 +7,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class Page extends AbstractEntity {
-    private String title;
-    private String text;
-    private String parent;
-    private Long serialNumber;
+    private final String title;
+    private final String text;
+    private final String parent;
+    private final Long serialNumber;
 
-    public Page() {}
-
-    private Page(QueryDocumentSnapshot document) {
+    protected Page(QueryDocumentSnapshot document) {
         super(document.getId());
         title = document.getString("title");
         text = document.getString("text");
