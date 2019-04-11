@@ -2,6 +2,8 @@ package utobe.learn2code.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.text.HtmlCompat;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,10 @@ public class PageFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
         TextView textView = rootView.findViewById(R.id.page_text);
-        textView.setText(((Page) EntityManager.getInstance().getEntity(pageId)).getText());
+
+        String text = ((Page) EntityManager.getInstance().getEntity(pageId)).getText();
+
+        textView.setText(HtmlCompat.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
         return rootView;
     }
 }

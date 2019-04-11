@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TopicAdapter;
@@ -39,7 +38,6 @@ public class TopicActivity extends AppCompatActivity {
         language = (Language)EntityManager.getInstance().getEntity(extras.getString("language"));
         topic = (Topic)EntityManager.getInstance().getEntity(extras.getString("topic"));
 
-        Log.i("ASD", topic.getId());
         FirebaseFirestore.getInstance().collection("pages")
                 .whereEqualTo("parent", topic.getId())
                 .get()
@@ -47,6 +45,12 @@ public class TopicActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Page> pages = Page.buildPages(queryDocumentSnapshots);
+                        pages.sort(new Comparator<Page>() {
+                            @Override
+                            public int compare(Page o1, Page o2) {
+                                return o1.getSerialNumber().compareTo(o2.getSerialNumber());
+                            }
+                        });
 
                         // Set up the ViewPager with the sections adapter.
                         mViewPager = findViewById(R.id.container);
@@ -62,8 +66,9 @@ public class TopicActivity extends AppCompatActivity {
 
                             @Override
                             public void onPageSelected(int i) {
-                                Toast.makeText(TopicActivity.this,
-                                        "Selected page position: " + i, Toast.LENGTH_SHORT).show();
+                                if (mViewPager.getAdapter().getCount() == i) {
+                                    // last page
+                                }
                             }
 
                             @Override
