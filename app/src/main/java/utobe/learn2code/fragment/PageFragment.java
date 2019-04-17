@@ -1,5 +1,6 @@
 package utobe.learn2code.fragment;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -75,8 +76,14 @@ public class PageFragment extends Fragment {
                     int errCounter = 0;
                     for (int i = 0; i < buttons.length; i++) {
                         if (page.getCorrect().equals(chars[i]) != buttons[i].isChecked()) {
+                            if (page.getCorrect().equals(chars[i])) {
+                                buttons[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
+                                // Ha jó lett volna
+                            } else {
+                                buttons[i].setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                            }
+                            buttons[i].setError(getString(R.string.checxbox_incorrect));
                             ++errCounter;
-                            buttons[i].setError("HIBA");
                         } else {
                             buttons[i].setError(null);
                         }

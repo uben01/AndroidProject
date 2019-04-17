@@ -13,7 +13,20 @@
           "package_name": "utobe.learn2code"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "767763021010-f5qpfdnpjv3e8chbj9cjc6snmcfduut8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "utobe.learn2code",
+            "certificate_hash": "dcd480c5959d40f1e49a2e34c2448968716ebcee"
+          }
+        },
+        {
+          "client_id": "767763021010-1ga52ktk3dajgaim3512700l7jc101l3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA3kslEX-E1pk0ItEzOhbhy7rnBrmzdIt0"

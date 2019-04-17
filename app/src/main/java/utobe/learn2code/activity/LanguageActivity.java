@@ -19,7 +19,7 @@ import utobe.learn2code.R;
 import utobe.learn2code.adapter.LanguageSelectAdapter;
 import utobe.learn2code.model.Language;
 
-public class MainActivity extends AppCompatActivity {
+public class LanguageActivity extends AppCompatActivity {
 
     private final Activity gThis = this;
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_language);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
@@ -41,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Language> languages = new ArrayList<>();
-                        for(int i = 0; i < 20; i++)
-                            languages.addAll(Language.buildLanguages(queryDocumentSnapshots));
+                        ArrayList<Language> languages = new ArrayList<>(Language.buildLanguages(queryDocumentSnapshots));
 
                         final LanguageSelectAdapter adapter;
                         view.setLayoutManager(new GridLayoutManager(gThis, elementCount));

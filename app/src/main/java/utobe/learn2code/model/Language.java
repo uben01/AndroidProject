@@ -12,7 +12,7 @@ public class Language extends AbstractEntity {
     private Language(QueryDocumentSnapshot document) {
         super(document.getId());
         name = document.getString("name");
-        icon = document.getDocumentReference("icon").getPath();
+        icon = document.getString("icon");
     }
 
     public static ArrayList<Language> buildLanguages(QuerySnapshot documents) {

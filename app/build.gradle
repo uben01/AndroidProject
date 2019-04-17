@@ -39,6 +39,8 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:16.2.1"
     implementation 'com.firebaseui:firebase-ui-firestore:4.3.2'
     implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+
 }
 
 

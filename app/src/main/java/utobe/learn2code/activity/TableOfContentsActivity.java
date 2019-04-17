@@ -9,17 +9,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Iterator;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TableOfContentAdapter;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Language;
+import utobe.learn2code.model.Result;
 import utobe.learn2code.model.Topic;
+
+import static utobe.learn2code.model.Result.buildResult;
 
 public class TableOfContentsActivity extends AppCompatActivity {
 
@@ -40,20 +45,58 @@ public class TableOfContentsActivity extends AppCompatActivity {
         final Language l = (Language) EntityManager.getInstance().getEntity(extras.getString("id"));
         view = findViewById(R.id.topicsTable);
 
-        FirebaseFirestore.getInstance().collection("topics")
-                .whereEqualTo("parent", l.getId())
-                .get()
+        CollectionReference topicsRef = FirebaseFirestore.getInstance().collection("topics");
+        topicsRef.whereEqualTo("parent", l.getId());
+        topicsRef.orderBy("serialNumber");
+        topicsRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
 
-                        topics.sort(new Comparator<Topic>() {
-                            @Override
-                            public int compare(Topic o1, Topic o2) {
-                                return o1.getSerialNumber().compareTo(o2.getSerialNumber());
-                            }
-                        });
+                        Iterator<Topic> iterator = topics.iterator();
+                        while (iterator.hasNext()) {
+                            final Topic t = iterator.next();
+
+                            if (!t.getTest())
+                                continue;
+
+                            CollectionReference resultsRef = FirebaseFirestore.getInstance().collection("results");
+                            resultsRef.whereEqualTo("topic", t.getId());
+                            resultsRef.whereEqualTo("user", EntityManager.getInstance().getLogedInUser().getUid());
+                            resultsRef.get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                            if (!queryDocumentSnapshots.isEmpty()) {
+                                                // TEST WITH RESULT
+                                                t.setResult(buildResult(queryDocumentSnapshots.getDocuments().get(0)).getId());
+                                            } else {
+                                                final Result result = Result.buildResult(EntityManager.getInstance().getLogedInUser().getUid(), t.getId());
+
+                                                // TEST WITHOUT RESULT -- HAVE TO ADD A NEW
+                                                FirebaseFirestore.getInstance().collection("results")
+                                                        .add(result)
+                                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentReference documentReference) {
+                                                                // presist element
+                                                                try {
+                                                                    result.setId(documentReference.getId());
+                                                                } catch (Exception e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                                t.setResult(result.getId());
+                                                            }
+                                                        });
+                                            }
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+                        }
+
 
                         mAdapter = new TableOfContentAdapter(gThis, topics);
                         mAdapter.setClickListener(new TableOfContentAdapter.ItemClickListener() {

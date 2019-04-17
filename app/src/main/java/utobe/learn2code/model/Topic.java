@@ -5,12 +5,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import utobe.learn2code.enititymanager.EntityManager;
+
 public class Topic extends AbstractEntity {
-    private final String title;
-    private final Boolean isTest;
-    private final Boolean isUnlocked;
-    private final String parent;
-    private final Long serialNumber;
+    private String title;
+    private Boolean isTest;
+    private Boolean isUnlocked;
+    private String parent;
+    private Long serialNumber;
+
+    private String result = null;
 
     private Topic(QueryDocumentSnapshot document) {
         super(document.getId());
@@ -31,23 +35,51 @@ public class Topic extends AbstractEntity {
         return topics;
     }
 
+    public Double getResult() {
+        return result == null ? null : ((Result) EntityManager.getInstance().getEntity(result)).getResult();
+    }
+
+    public void setResult(String resultID) {
+        result = resultID;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Boolean getTest() {
         return isTest;
     }
 
+    public void setTest(Boolean test) {
+        isTest = test;
+    }
+
     public Boolean getUnlocked() {
         return isUnlocked;
+    }
+
+    public void setUnlocked(Boolean unlocked) {
+        isUnlocked = unlocked;
     }
 
     public String getParent() {
         return parent;
     }
 
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
     public Long getSerialNumber() {
         return serialNumber;
+    }
+
+    public void setSerialNumber(Long serialNumber) {
+        this.serialNumber = serialNumber;
     }
 }

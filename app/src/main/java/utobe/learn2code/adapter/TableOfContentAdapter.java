@@ -39,9 +39,23 @@ public class TableOfContentAdapter extends
     // binds the data to the TextView in each cell
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        holder.myTextView.setText(mData.get(position).getTitle());
+        // TODO: megszépíteni
+        Topic topic = mData.get(position);
+        StringBuilder title = new StringBuilder(topic.getTitle());
+
+        if (topic.getTest()) {
+            title.append(" <--> ");
+
+            if (topic.getResult() != null)
+                title.append(topic.getResult().intValue() * 100 + "%");
+            else
+                title.append("0%");
+        }
+
+
+        holder.myTextView.setText(title.toString());
         holder.myButton.setText(
-                        (mData.get(position).getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
+                (topic.getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
         );
 
         holder.myButton.setClickable(!mData.get(position).getUnlocked());

@@ -1,5 +1,7 @@
 package utobe.learn2code.enititymanager;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.HashMap;
 
 import utobe.learn2code.model.AbstractEntity;
@@ -7,6 +9,7 @@ import utobe.learn2code.model.AbstractEntity;
 public class EntityManager {
     private static EntityManager em = null;
     private final HashMap<String, AbstractEntity> mEntities = new HashMap<>();
+    private FirebaseUser logedInUser;
 
     public static EntityManager getInstance() {
         if (em == null)
@@ -23,7 +26,11 @@ public class EntityManager {
         return mEntities.get(navProperty);
     }
 
-    public Integer getSize() {
-        return mEntities.size();
+    public FirebaseUser getLogedInUser() {
+        return logedInUser;
+    }
+
+    public void setLogedInUser(FirebaseUser logedInUser) {
+        this.logedInUser = logedInUser;
     }
 }
