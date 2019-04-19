@@ -6,8 +6,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class Language extends AbstractEntity {
-    private String name;
-    private String icon;
+    private final String name;
+    private final String icon;
 
     private Language(QueryDocumentSnapshot document) {
         super(document.getId());

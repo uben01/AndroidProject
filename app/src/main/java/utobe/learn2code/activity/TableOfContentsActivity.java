@@ -45,10 +45,10 @@ public class TableOfContentsActivity extends AppCompatActivity {
         final Language l = (Language) EntityManager.getInstance().getEntity(extras.getString("id"));
         view = findViewById(R.id.topicsTable);
 
-        CollectionReference topicsRef = FirebaseFirestore.getInstance().collection("topics");
-        topicsRef.whereEqualTo("parent", l.getId());
-        topicsRef.orderBy("serialNumber");
-        topicsRef.get()
+        FirebaseFirestore.getInstance().collection("topics")
+                .whereEqualTo("parent", l.getId())
+                .orderBy("serialNumber")
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

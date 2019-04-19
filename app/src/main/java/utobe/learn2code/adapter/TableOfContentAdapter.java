@@ -2,8 +2,13 @@ package utobe.learn2code.adapter;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,19 +46,27 @@ public class TableOfContentAdapter extends
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         // TODO: megszépíteni
         Topic topic = mData.get(position);
-        StringBuilder title = new StringBuilder(topic.getTitle());
+
+        SpannableStringBuilder title = new SpannableStringBuilder(topic.getTitle());
 
         if (topic.getTest()) {
-            title.append(" <--> ");
 
-            if (topic.getResult() != null)
-                title.append(topic.getResult().intValue() * 100 + "%");
-            else
-                title.append("0%");
+            if (topic.getResult() != null) {
+                title.append(" " + topic.getResult().intValue() * 100);
+            } else {
+                title.append(" 0");
+            }
+            title.append("%");
+
+            int startIndex = topic.getTitle().length();
+            int endIndex = topic.getTitle().length();
+
+            title.setSpan(new StyleSpan(Typeface.BOLD), startIndex, endIndex, 0);
+            title.setSpan(new ForegroundColorSpan(Color.rgb(70, 130, 180)), startIndex, endIndex, 0);
         }
 
 
-        holder.myTextView.setText(title.toString());
+        holder.myTextView.setText(title);
         holder.myButton.setText(
                 (topic.getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
         );

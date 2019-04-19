@@ -7,7 +7,7 @@ public class Result extends AbstractEntity {
     private String page;
     private Double result;
 
-    protected Result(DocumentSnapshot document) {
+    Result(DocumentSnapshot document) {
         super(document.getId());
 
         user = document.getString("user");
@@ -15,7 +15,7 @@ public class Result extends AbstractEntity {
         result = document.getDouble("result");
     }
 
-    protected Result(String user, String page) {
+    Result(String user, String page) {
         this.user = user;
         this.page = page;
         this.result = 0.0;

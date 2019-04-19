@@ -9,7 +9,7 @@ public class TestPage extends Page {
     private final String A, B, C, D;
     private final String correct;
 
-    protected TestPage(QueryDocumentSnapshot document) {
+    TestPage(QueryDocumentSnapshot document) {
         super(document);
 
         A = document.getString("A");

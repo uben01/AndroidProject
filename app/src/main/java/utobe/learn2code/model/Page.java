@@ -12,7 +12,7 @@ public class Page extends AbstractEntity {
     private final String parent;
     private final Long serialNumber;
 
-    protected Page(QueryDocumentSnapshot document) {
+    Page(QueryDocumentSnapshot document) {
         super(document.getId());
         title = document.getString("title");
         text = document.getString("text");
