@@ -38,6 +38,8 @@ public class PageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        assert getArguments() != null;
         pageId = getArguments().getString("PageId");
         isTest = getArguments().getBoolean("IsTest");
     }
@@ -66,29 +68,33 @@ public class PageFragment extends Fragment {
             final CheckBox D = block.findViewById(R.id.answer_D);
             D.setText(page.getD());
 
-            final CheckBox[] buttons = {A, B, C, D};
+            final CheckBox[] checkBoxes = {A, B, C, D};
 
-            final String[] chars = {"A", "B", "C", "D"};
+            final String[] optionChars = {"A", "B", "C", "D"};
             Button runTest = rootView.findViewById(R.id.button_check);
             runTest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int errCounter = 0;
-                    for (int i = 0; i < buttons.length; i++) {
-                        if (page.getCorrect().equals(chars[i]) != buttons[i].isChecked()) {
-                            if (page.getCorrect().equals(chars[i])) {
-                                buttons[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
-                                // Ha jó lett volna
+                    int errorCounter = 0;
+                    for (int i = 0; i < checkBoxes.length; i++) {
+                        if (page.getCorrectAnswers().contains(optionChars[i]) != checkBoxes[i].isChecked()) {
+                            if (page.getCorrectAnswers().contains(optionChars[i])) {
+                                checkBoxes[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
                             } else {
-                                buttons[i].setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                                checkBoxes[i].setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                             }
-                            buttons[i].setError(getString(R.string.checxbox_incorrect));
-                            ++errCounter;
+                            checkBoxes[i].setError(getString(R.string.checxbox_incorrect));
+                            ++errorCounter;
                         } else {
-                            buttons[i].setError(null);
+                            checkBoxes[i].setError(null);
                         }
-                        buttons[i].setEnabled(false);
+                        checkBoxes[i].setEnabled(false);
                     }
+
+                    // Set result
+                    Page page = (Page) EntityManager.getInstance().getEntity(pageId);
+                    page.setResult(errorCounter / 4.0);
+
                 }
             });
         }

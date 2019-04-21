@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
@@ -50,9 +51,8 @@ public class TableOfContentAdapter extends
         SpannableStringBuilder title = new SpannableStringBuilder(topic.getTitle());
 
         if (topic.getTest()) {
-
             if (topic.getResult() != null) {
-                title.append(" " + topic.getResult().intValue() * 100);
+                title.append(MessageFormat.format(" {}", (topic.getResult() * 100)));
             } else {
                 title.append(" 0");
             }
