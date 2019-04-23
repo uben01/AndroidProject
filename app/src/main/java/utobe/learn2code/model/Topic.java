@@ -16,6 +16,8 @@ public class Topic extends AbstractEntity {
 
     private String result = null;
 
+    private ArrayList<Page> pages = new ArrayList<>();
+
     private Topic(QueryDocumentSnapshot document) {
         super(document.getId());
         title = document.getString("title");
@@ -35,8 +37,8 @@ public class Topic extends AbstractEntity {
         return topics;
     }
 
-    public Double getResult() {
-        return result == null ? null : ((Result) EntityManager.getInstance().getEntity(result)).getResult();
+    public String getResult() {
+        return result;
     }
 
     public void setResult(String resultID) {
@@ -81,5 +83,19 @@ public class Topic extends AbstractEntity {
 
     public void setSerialNumber(Long serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public ArrayList<? extends Page> getPages() {
+        return pages;
+    }
+
+    public <T extends Page> void addPage(T page) {
+        pages.add(page);
+    }
+
+    public Integer getPageNumber(){
+        if(pages == null)
+            return 0;
+        return pages.size();
     }
 }

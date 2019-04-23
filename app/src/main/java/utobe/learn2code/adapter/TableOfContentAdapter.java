@@ -18,17 +18,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
+import utobe.learn2code.enititymanager.EntityManager;
+import utobe.learn2code.model.Result;
 import utobe.learn2code.model.Topic;
 
 public class TableOfContentAdapter extends
         RecyclerView.Adapter<TableOfContentAdapter.ViewHolder> {
 
-    private final ArrayList<Topic> mData;
+    private final ArrayList<String> mData;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public TableOfContentAdapter(Context context, ArrayList<Topic> data) {
+    public TableOfContentAdapter(Context context, ArrayList<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -45,14 +47,14 @@ public class TableOfContentAdapter extends
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         // TODO: megszépíteni
-        Topic topic = mData.get(position);
+        Topic topic = (Topic)EntityManager.getInstance().getEntity(mData.get(position));
 
         SpannableStringBuilder title = new SpannableStringBuilder(topic.getTitle());
 
         if (topic.getTest()) {
 
             if (topic.getResult() != null) {
-                title.append(" " + topic.getResult().intValue() * 100);
+                title.append(" " + ((Result)EntityManager.getInstance().getEntity(topic.getResult())).getResult().intValue() * 100);
             } else {
                 title.append(" 0");
             }
@@ -71,7 +73,7 @@ public class TableOfContentAdapter extends
                 (topic.getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
         );
 
-        holder.myButton.setClickable(!mData.get(position).getUnlocked());
+        holder.myButton.setClickable(((Topic)EntityManager.getInstance().getEntity(mData.get(position))).getUnlocked());
     }
 
     // total number of cells
@@ -79,7 +81,6 @@ public class TableOfContentAdapter extends
     public int getItemCount() {
         return mData.size();
     }
-
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -101,7 +102,7 @@ public class TableOfContentAdapter extends
 
     // convenience method for getting data at click position
     public Topic getItem(int id) {
-        return mData.get(id);
+        return (Topic)EntityManager.getInstance().getEntity(mData.get(id));
     }
 
     // allows clicks events to be caught

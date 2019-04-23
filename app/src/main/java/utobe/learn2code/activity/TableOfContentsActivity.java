@@ -53,18 +53,21 @@ public class TableOfContentsActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
+                        ArrayList<String> topicIds = new ArrayList<>();
 
                         Iterator<Topic> iterator = topics.iterator();
                         while (iterator.hasNext()) {
                             final Topic t = iterator.next();
 
+                            topicIds.add(t.getId());
+
                             if (!t.getTest())
                                 continue;
 
-                            CollectionReference resultsRef = FirebaseFirestore.getInstance().collection("results");
-                            resultsRef.whereEqualTo("topic", t.getId());
-                            resultsRef.whereEqualTo("user", EntityManager.getInstance().getLogedInUser().getUid());
-                            resultsRef.get()
+                            FirebaseFirestore.getInstance().collection("results")
+                            .whereEqualTo("topic", t.getId())
+                            .whereEqualTo("user", EntityManager.getInstance().getLogedInUser().getUid())
+                            .get()
                                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
                                         @Override
@@ -73,6 +76,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
                                             if (!queryDocumentSnapshots.isEmpty()) {
                                                 // TEST WITH RESULT
                                                 t.setResult(buildResult(queryDocumentSnapshots.getDocuments().get(0)).getId());
+                                                mAdapter.notifyDataSetChanged();
                                             } else {
                                                 final Result result = Result.buildResult(EntityManager.getInstance().getLogedInUser().getUid(), t.getId());
 
@@ -89,16 +93,15 @@ public class TableOfContentsActivity extends AppCompatActivity {
                                                                     e.printStackTrace();
                                                                 }
                                                                 t.setResult(result.getId());
+                                                                mAdapter.notifyDataSetChanged();
                                                             }
                                                         });
                                             }
-                                            mAdapter.notifyDataSetChanged();
                                         }
                                     });
                         }
 
-
-                        mAdapter = new TableOfContentAdapter(gThis, topics);
+                        mAdapter = new TableOfContentAdapter(gThis, topicIds);
                         mAdapter.setClickListener(new TableOfContentAdapter.ItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {

@@ -16,7 +16,9 @@ import android.widget.TextView;
 import utobe.learn2code.R;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Page;
+import utobe.learn2code.model.Result;
 import utobe.learn2code.model.TestPage;
+import utobe.learn2code.model.Topic;
 
 public class PageFragment extends Fragment {
     private String pageId;
@@ -89,6 +91,8 @@ public class PageFragment extends Fragment {
                         }
                         buttons[i].setEnabled(false);
                     }
+                    page.setSubResult(1 - (errCounter / 4.0));
+                    ((Result) EntityManager.getInstance().getEntity(((Topic) EntityManager.getInstance().getEntity(page.getParent())).getResult())).updateResult();
                 }
             });
         }

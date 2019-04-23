@@ -1,24 +1,31 @@
 package utobe.learn2code.model;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import utobe.learn2code.enititymanager.EntityManager;
 
 public class Result extends AbstractEntity {
     private String user;
-    private String page;
+    private String topic;
     private Double result;
+
+    private Integer pageCounter;
 
     Result(DocumentSnapshot document) {
         super(document.getId());
 
         user = document.getString("user");
-        page = document.getString("topic");
+        topic = document.getString("topic");
         result = document.getDouble("result");
+        pageCounter = ((Topic) EntityManager.getInstance().getEntity(topic)).getPageNumber();
     }
 
-    Result(String user, String page) {
+    Result(String user, String topic) {
         this.user = user;
-        this.page = page;
+        this.topic = topic;
         this.result = 0.0;
+        pageCounter = ((Topic) EntityManager.getInstance().getEntity(topic)).getPageNumber();
     }
 
     public static Result buildResult(DocumentSnapshot document) {
@@ -38,19 +45,29 @@ public class Result extends AbstractEntity {
         this.user = user;
     }
 
-    public String getPage() {
-        return page;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setPage(String page) {
-        this.page = page;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public Double getResult() {
         return result;
     }
 
-    public void setResult(Double result) {
-        this.result = result;
+    public void updateResult() {
+        Topic t = (Topic) EntityManager.getInstance().getEntity(topic);
+        Double result = 0.0;
+        for( Page p : t.getPages())
+        {
+            result += p.getSubResult();
+        }
+
+        this.result = result/t.getPageNumber();
+
+        FirebaseFirestore.getInstance().collection("results").document(getId())
+                .update("result", this.result);
     }
 }

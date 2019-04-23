@@ -6,19 +6,24 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import utobe.learn2code.enititymanager.EntityManager;
+
 public class Page extends AbstractEntity {
     private final String title;
     private final String text;
     private final String parent;
     private final Long serialNumber;
 
+    private Double subResult = 0.0;
+
     Page(QueryDocumentSnapshot document) {
         super(document.getId());
         title = document.getString("title");
         text = document.getString("text");
         parent = document.getString("parent");
-
         serialNumber = document.getLong("serialNumber");
+
+        ((Topic) EntityManager.getInstance().getEntity(parent)).addPage(this);
     }
 
     public static ArrayList<Page> buildPages(QuerySnapshot documents) {
@@ -47,5 +52,12 @@ public class Page extends AbstractEntity {
         return serialNumber;
     }
 
+    public Double getSubResult() {
+        return subResult;
+    }
+
+    public void setSubResult(Double subResult) {
+        this.subResult = subResult;
+    }
 }
 
