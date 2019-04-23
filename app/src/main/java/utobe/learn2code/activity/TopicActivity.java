@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TopicAdapter;
 import utobe.learn2code.enititymanager.EntityManager;
+import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.TestPage;
@@ -25,7 +26,6 @@ public class TopicActivity extends AppCompatActivity {
     private TopicAdapter mTopicAdapter;
     private ViewPager mViewPager;
 
-    private Language language;
     private Topic topic;
 
     @Override
@@ -37,7 +37,7 @@ public class TopicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        language = (Language) EntityManager.getInstance().getEntity(extras.getString("language"));
+        Language language = (Language) EntityManager.getInstance().getEntity(extras.getString("language"));
         topic = (Topic) EntityManager.getInstance().getEntity(extras.getString("topic"));
 
         FirebaseFirestore.getInstance().collection("pages")
@@ -48,36 +48,41 @@ public class TopicActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Page> pages = new ArrayList<>();
-                        if (!topic.getTest()) {
-                            pages.addAll(Page.buildPages(queryDocumentSnapshots));
-                        } else {
-                            pages.addAll(TestPage.buildTestPages(queryDocumentSnapshots));
+                        try {
+                            if (!topic.getTest()) {
+                                pages.addAll(Page.buildPages(queryDocumentSnapshots));
+                            } else {
+                                pages.addAll(TestPage.buildTestPages(queryDocumentSnapshots));
+                            }
+                            topic.setPages(pages);
+
+                            // Set up the ViewPager with the sections adapter.
+                            mViewPager = findViewById(R.id.container);
+
+                            mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages, topic.getTest(), mViewPager);
+                            mViewPager.setAdapter(mTopicAdapter);
+
+                            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                @Override
+                                public void onPageScrolled(int i, float v, int i1) {
+
+                                }
+
+                                @Override
+                                public void onPageSelected(int i) {
+
+                                }
+
+                                @Override
+                                public void onPageScrollStateChanged(int i) {
+
+                                }
+                            });
+                            final TabLayout tabLayout = findViewById(R.id.view_pager_tab);
+                            tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+                        } catch (PersistenceException e) {
+                            // TODO
                         }
-
-                        // Set up the ViewPager with the sections adapter.
-                        mViewPager = findViewById(R.id.container);
-
-                        mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages, topic.getTest(), mViewPager);
-                        mViewPager.setAdapter(mTopicAdapter);
-
-                        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                            @Override
-                            public void onPageScrolled(int i, float v, int i1) {
-
-                            }
-
-                            @Override
-                            public void onPageSelected(int i) {
-
-                            }
-
-                            @Override
-                            public void onPageScrollStateChanged(int i) {
-
-                            }
-                        });
-                        final TabLayout tabLayout = findViewById(R.id.view_pager_tab);
-                        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
                     }
                 });
 

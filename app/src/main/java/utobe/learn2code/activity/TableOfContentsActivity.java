@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -66,7 +65,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
 
                             FirebaseFirestore.getInstance().collection("results")
                             .whereEqualTo("topic", t.getId())
-                            .whereEqualTo("user", EntityManager.getInstance().getLogedInUser().getUid())
+                                    .whereEqualTo("user", EntityManager.getInstance().getLoggedInUser().getUid())
                             .get()
                                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
@@ -78,7 +77,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
                                                 t.setResult(buildResult(queryDocumentSnapshots.getDocuments().get(0)).getId());
                                                 mAdapter.notifyDataSetChanged();
                                             } else {
-                                                final Result result = Result.buildResult(EntityManager.getInstance().getLogedInUser().getUid(), t.getId());
+                                                final Result result = Result.buildResult(EntityManager.getInstance().getLoggedInUser().getUid(), t.getId());
 
                                                 // TEST WITHOUT RESULT -- HAVE TO ADD A NEW
                                                 FirebaseFirestore.getInstance().collection("results")

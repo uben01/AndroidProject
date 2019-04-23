@@ -9,7 +9,7 @@ import utobe.learn2code.model.AbstractEntity;
 public class EntityManager {
     private static EntityManager em = null;
     private final HashMap<String, AbstractEntity> mEntities = new HashMap<>();
-    private FirebaseUser logedInUser;
+    private FirebaseUser loggedInUser;
 
     public static EntityManager getInstance() {
         if (em == null)
@@ -26,11 +26,11 @@ public class EntityManager {
         return mEntities.get(navProperty);
     }
 
-    public FirebaseUser getLogedInUser() {
-        return logedInUser;
+    public FirebaseUser getLoggedInUser() {
+        return loggedInUser;
     }
 
-    public void setLogedInUser(FirebaseUser logedInUser) {
-        this.logedInUser = logedInUser;
+    public void setLoggedInUser(FirebaseUser loggedInUser) {
+        this.loggedInUser = loggedInUser;
     }
 }

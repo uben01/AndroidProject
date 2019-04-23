@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                EntityManager.getInstance().setLogedInUser(user);
+                EntityManager.getInstance().setLoggedInUser(user);
                 Intent intent = new Intent(LoginActivity.this, LanguageActivity.class);
                 startActivity(intent);
                 // ...

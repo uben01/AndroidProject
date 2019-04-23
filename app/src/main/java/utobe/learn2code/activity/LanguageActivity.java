@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.LanguageSelectAdapter;
+import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 
 public class LanguageActivity extends AppCompatActivity {
@@ -41,23 +42,27 @@ public class LanguageActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Language> languages = new ArrayList<>(Language.buildLanguages(queryDocumentSnapshots));
+                        try {
+                            ArrayList<Language> languages = new ArrayList<>(Language.buildLanguages(queryDocumentSnapshots));
 
-                        final LanguageSelectAdapter adapter;
-                        view.setLayoutManager(new GridLayoutManager(gThis, elementCount));
+                            final LanguageSelectAdapter adapter;
+                            view.setLayoutManager(new GridLayoutManager(gThis, elementCount));
 
-                        adapter = new LanguageSelectAdapter(gThis, languages);
-                        adapter.setClickListener(new LanguageSelectAdapter.ItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                Language selected = adapter.getItem(position);
-                                Intent intent = new Intent(gThis, TableOfContentsActivity.class);
-                                intent.putExtra("id", selected.getId());
+                            adapter = new LanguageSelectAdapter(gThis, languages);
+                            adapter.setClickListener(new LanguageSelectAdapter.ItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+                                    Language selected = adapter.getItem(position);
+                                    Intent intent = new Intent(gThis, TableOfContentsActivity.class);
+                                    intent.putExtra("id", selected.getId());
 
-                                startActivity(intent);
-                            }
-                        });
-                        view.setAdapter(adapter);
+                                    startActivity(intent);
+                                }
+                            });
+                            view.setAdapter(adapter);
+                        } catch (PersistenceException e) {
+                            // TODO
+                        }
                     }
                 });
     }
