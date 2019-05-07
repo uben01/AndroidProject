@@ -3,6 +3,7 @@ package utobe.learn2code.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 // ...
             } else {
+                Log.e("ASD", response.getError().getErrorCode() + "");
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.

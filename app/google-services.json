@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "767763021010-f5qpfdnpjv3e8chbj9cjc6snmcfduut8.apps.googleusercontent.com",
+          "client_id": "767763021010-o2umhgqg845c6kj1566jv5j709tan757.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "utobe.learn2code",
-            "certificate_hash": "dcd480c5959d40f1e49a2e34c2448968716ebcee"
+            "certificate_hash": "938550aa8ddae2eae88af17df0f666b3d52afd24"
+          }
+        },
+        {
+          "client_id": "767763021010-ffkk01hhh3hl83emop01usjfpc2ja5g4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "utobe.learn2code",
+            "certificate_hash": "d65c7c4cb5fa7db3b0e036200be1ec3c5da14487"
           }
         },
         {

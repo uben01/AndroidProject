@@ -7,11 +7,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-abstract class SmartFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
+abstract class SmartFragmentStatePagerAdapterI extends FragmentStatePagerAdapter implements IAbstractAdapter {
     // Sparse array to keep track of registered fragments in memory
     private final SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    SmartFragmentStatePagerAdapter(FragmentManager fragmentManager) {
+    SmartFragmentStatePagerAdapterI(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
@@ -44,4 +44,5 @@ abstract class SmartFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
             return instantiateItem(pagerInstance, position);
         }
     }
+
 }

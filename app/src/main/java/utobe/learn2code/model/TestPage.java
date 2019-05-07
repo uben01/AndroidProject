@@ -5,14 +5,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import utobe.learn2code.exception.PersistenceException;
 
 public class TestPage extends Page {
     private final String A, B, C, D;
-    private final List<String> correct;
+    private final char[] correct;
 
     private TestPage(QueryDocumentSnapshot document) throws PersistenceException {
         super(document);
@@ -21,7 +19,7 @@ public class TestPage extends Page {
         B = document.getString("B");
         C = document.getString("C");
         D = document.getString("D");
-        correct = Arrays.asList(document.getString("correct").split("|"));
+        correct = document.getString("correct").toCharArray();
 
         if (A == null || B == null || C == null || D == null || correct == null)
             throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
@@ -57,7 +55,7 @@ public class TestPage extends Page {
         return D;
     }
 
-    public List<String> getCorrectAnswers() {
+    public char[] getCorrectAnswers() {
         return correct;
     }
 }

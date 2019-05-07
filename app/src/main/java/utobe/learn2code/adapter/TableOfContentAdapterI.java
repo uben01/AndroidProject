@@ -18,19 +18,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
-import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Result;
 import utobe.learn2code.model.Topic;
 
-public class TableOfContentAdapter extends
-        RecyclerView.Adapter<TableOfContentAdapter.ViewHolder> {
+public class TableOfContentAdapterI extends
+        RecyclerView.Adapter<TableOfContentAdapterI.ViewHolder> implements IAbstractAdapter {
 
     private final ArrayList<String> mData;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public TableOfContentAdapter(Context context, ArrayList<String> data) {
+    public TableOfContentAdapterI(Context context, ArrayList<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -47,14 +46,16 @@ public class TableOfContentAdapter extends
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         // TODO: megszépíteni
-        Topic topic = (Topic)EntityManager.getInstance().getEntity(mData.get(position));
+        Topic topic = (Topic) entityManager.getEntity(mData.get(position));
 
         SpannableStringBuilder title = new SpannableStringBuilder(topic.getTitle());
 
         if (topic.getTest()) {
 
             if (topic.getResult() != null) {
-                title.append(" " + ((Result)EntityManager.getInstance().getEntity(topic.getResult())).getResult().intValue() * 100);
+                title
+                        .append(" ")
+                        .append(String.valueOf(Math.round(((Result) entityManager.getEntity(topic.getResult())).getResult() * 100)));
             } else {
                 title.append(" 0");
             }
@@ -73,13 +74,18 @@ public class TableOfContentAdapter extends
                 (topic.getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
         );
 
-        holder.myButton.setClickable(((Topic)EntityManager.getInstance().getEntity(mData.get(position))).getUnlocked());
+        holder.myButton.setClickable(((Topic) entityManager.getEntity(mData.get(position))).getUnlocked());
     }
 
     // total number of cells
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    // convenience method for getting data at click position
+    public Topic getItem(int id) {
+        return (Topic) entityManager.getEntity(mData.get(id));
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -91,18 +97,14 @@ public class TableOfContentAdapter extends
             super(itemView);
             myTextView = itemView.findViewById(R.id.topic_name);
             myButton = itemView.findViewById(R.id.topic_button);
-            itemView.setOnClickListener(this);
+
+            myButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
-    }
-
-    // convenience method for getting data at click position
-    public Topic getItem(int id) {
-        return (Topic)EntityManager.getInstance().getEntity(mData.get(id));
     }
 
     // allows clicks events to be caught

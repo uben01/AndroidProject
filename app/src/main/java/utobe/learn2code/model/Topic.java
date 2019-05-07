@@ -5,8 +5,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import utobe.learn2code.enititymanager.EntityManager;
-
 public class Topic extends AbstractEntity {
     private String title;
     private Boolean isTest;
@@ -91,6 +89,10 @@ public class Topic extends AbstractEntity {
 
     public <T extends Page> void addPage(T page) {
         pages.add(page);
+    }
+
+    public void setPages(ArrayList<Page> pages) {
+        this.pages = pages;
     }
 
     public Integer getPageNumber(){

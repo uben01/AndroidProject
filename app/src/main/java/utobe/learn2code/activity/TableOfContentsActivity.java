@@ -6,18 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import utobe.learn2code.R;
-import utobe.learn2code.adapter.TableOfContentAdapter;
+import utobe.learn2code.adapter.TableOfContentAdapterI;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Result;
@@ -30,12 +25,25 @@ public class TableOfContentsActivity extends AppCompatActivity {
     private final Activity gThis = this;
 
     private RecyclerView view;
-    private TableOfContentAdapter mAdapter;
+    private TableOfContentAdapterI mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        loadDataAndSetView();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadDataAndSetView();
+
+    }
+
+    private void loadDataAndSetView() {
         setContentView(R.layout.activity_table_of_contents);
 
         Intent intent = getIntent();
@@ -48,77 +56,60 @@ public class TableOfContentsActivity extends AppCompatActivity {
                 .whereEqualTo("parent", l.getId())
                 .orderBy("serialNumber")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
-                        ArrayList<String> topicIds = new ArrayList<>();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
+                    ArrayList<String> topicIds = new ArrayList<>();
 
-                        Iterator<Topic> iterator = topics.iterator();
-                        while (iterator.hasNext()) {
-                            final Topic t = iterator.next();
+                    mAdapter = new TableOfContentAdapterI(gThis, topicIds);
 
-                            topicIds.add(t.getId());
+                    mAdapter.setClickListener((view, position) -> {
+                        Topic selected = mAdapter.getItem(position);
 
-                            if (!t.getTest())
-                                continue;
+                        Intent intent1 = new Intent(gThis, TopicActivity.class)
+                                .putExtra("language", selected.getParent())
+                                .putExtra("topic", selected.getId());
 
-                            FirebaseFirestore.getInstance().collection("results")
-                            .whereEqualTo("topic", t.getId())
-                                    .whereEqualTo("user", EntityManager.getInstance().getLoggedInUser().getUid())
-                            .get()
-                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        startActivity(intent1);
+                    });
 
-                                        @Override
-                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    view.setAdapter(mAdapter);
+                    view.setLayoutManager(new LinearLayoutManager(gThis));
 
-                                            if (!queryDocumentSnapshots.isEmpty()) {
-                                                // TEST WITH RESULT
-                                                t.setResult(buildResult(queryDocumentSnapshots.getDocuments().get(0)).getId());
-                                                mAdapter.notifyDataSetChanged();
-                                            } else {
-                                                final Result result = Result.buildResult(EntityManager.getInstance().getLoggedInUser().getUid(), t.getId());
+                    for (Topic t : topics) {
+                        topicIds.add(t.getId());
 
-                                                // TEST WITHOUT RESULT -- HAVE TO ADD A NEW
-                                                FirebaseFirestore.getInstance().collection("results")
-                                                        .add(result)
-                                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                            @Override
-                                                            public void onSuccess(DocumentReference documentReference) {
-                                                                // presist element
-                                                                try {
-                                                                    result.setId(documentReference.getId());
-                                                                } catch (Exception e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                                t.setResult(result.getId());
-                                                                mAdapter.notifyDataSetChanged();
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    });
-                        }
+                        if (!t.getTest())
+                            continue;
 
-                        mAdapter = new TableOfContentAdapter(gThis, topicIds);
-                        mAdapter.setClickListener(new TableOfContentAdapter.ItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                Topic selected = mAdapter.getItem(position);
+                        FirebaseFirestore.getInstance().collection("results")
+                                .whereEqualTo("topic", t.getId())
+                                .whereEqualTo("user", EntityManager.getInstance().getLoggedInUser().getUid())
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots1 -> {
 
-                                Intent intent = new Intent(gThis, TopicActivity.class);
-                                intent.putExtra("language", selected.getParent());
-                                intent.putExtra("topic", selected.getId());
+                                    if (!queryDocumentSnapshots1.isEmpty()) {
+                                        // TEST WITH RESULT
+                                        t.setResult(buildResult(queryDocumentSnapshots1.getDocuments().get(0)).getId());
+                                    } else {
+                                        final Result result = buildResult(EntityManager.getInstance().getLoggedInUser().getUid(), t.getId());
 
-                                startActivity(intent);
-                            }
-                        });
-
-                        view.setAdapter(mAdapter);
-                        view.setLayoutManager(new LinearLayoutManager(gThis));
-
+                                        // TEST WITHOUT RESULT -- HAVE TO ADD A NEW
+                                        FirebaseFirestore.getInstance().collection("results")
+                                                .add(result)
+                                                .addOnSuccessListener(documentReference -> {
+                                                    // presist element
+                                                    try {
+                                                        result.setId(documentReference.getId());
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    t.setResult(result.getId());
+                                                });
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                });
                     }
-                });
 
+                });
     }
 }

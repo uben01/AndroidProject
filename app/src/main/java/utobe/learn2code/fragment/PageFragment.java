@@ -72,28 +72,25 @@ public class PageFragment extends Fragment {
 
             final String[] chars = {"A", "B", "C", "D"};
             Button runTest = rootView.findViewById(R.id.button_check);
-            runTest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int errCounter = 0;
-                    for (int i = 0; i < buttons.length; i++) {
-                        if (page.getCorrect().equals(chars[i]) != buttons[i].isChecked()) {
-                            if (page.getCorrect().equals(chars[i])) {
-                                buttons[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
-                                // Ha jó lett volna
-                            } else {
-                                buttons[i].setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                            }
-                            buttons[i].setError(getString(R.string.checxbox_incorrect));
-                            ++errCounter;
+            runTest.setOnClickListener(v -> {
+                int errCounter = 0;
+                for (int i = 0; i < buttons.length; i++) {
+                    if (new String(page.getCorrectAnswers()).contains(chars[i]) != buttons[i].isChecked()) {
+                        if (new String(page.getCorrectAnswers()).contains(chars[i])) {
+                            buttons[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
+                            // Ha jó lett volna
                         } else {
-                            buttons[i].setError(null);
+                            buttons[i].setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                         }
-                        buttons[i].setEnabled(false);
+                        buttons[i].setError(getString(R.string.checxbox_incorrect));
+                        ++errCounter;
+                    } else {
+                        buttons[i].setError(null);
                     }
-                    page.setSubResult(1 - (errCounter / 4.0));
-                    ((Result) EntityManager.getInstance().getEntity(((Topic) EntityManager.getInstance().getEntity(page.getParent())).getResult())).updateResult();
+                    buttons[i].setEnabled(false);
                 }
+                page.setSubResult(1 - (errCounter / 4.0));
+                ((Result) EntityManager.getInstance().getEntity(((Topic) EntityManager.getInstance().getEntity(page.getParent())).getResult())).updateResult();
             });
         }
 
