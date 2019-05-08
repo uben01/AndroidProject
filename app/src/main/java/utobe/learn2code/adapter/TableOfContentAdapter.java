@@ -70,11 +70,8 @@ public class TableOfContentAdapter extends
 
 
         holder.myTextView.setText(title);
-        holder.myButton.setText(
-                (topic.getUnlocked() ? R.string.table_of_contents_unlocked : R.string.table_of_contents_locked)
-        );
+        holder.myButton.setText(R.string.table_of_contents_start);
 
-        holder.myButton.setClickable(((Topic) entityManager.getEntity(mData.get(position))).getUnlocked());
     }
 
     // total number of cells

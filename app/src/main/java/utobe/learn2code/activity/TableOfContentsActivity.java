@@ -13,10 +13,11 @@ import java.util.ArrayList;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TableOfContentAdapter;
-import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Result;
 import utobe.learn2code.model.Topic;
+import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 import static utobe.learn2code.model.Result.buildResult;
 
@@ -49,12 +50,12 @@ public class TableOfContentsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        final Language l = (Language) EntityManager.getInstance().getEntity(extras.getString("id"));
+        final Language l = (Language) EntityManager.getInstance().getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID.dbName));
         view = findViewById(R.id.topicsTable);
 
-        FirebaseFirestore.getInstance().collection("topics")
-                .whereEqualTo("parent", l.getId())
-                .orderBy("serialNumber")
+        FirebaseFirestore.getInstance().collection(Constants.TOPIC_ENTITY_SET_NAME.dbName)
+                .whereEqualTo(Constants.TOPIC_FIELD_PARENT.dbName, l.getId())
+                .orderBy(Constants.TOPIC_FIELD_SERIAL_NUMBER.dbName)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
@@ -66,8 +67,8 @@ public class TableOfContentsActivity extends AppCompatActivity {
                         Topic selected = mAdapter.getItem(position);
 
                         Intent intent1 = new Intent(gThis, TopicActivity.class)
-                                .putExtra("language", selected.getParent())
-                                .putExtra("topic", selected.getId());
+                                .putExtra(Constants.LANGUAGE_ENTITY_NAME.dbName, selected.getParent())
+                                .putExtra(Constants.TOPIC_ENTITY_NAME.dbName, selected.getId());
 
                         startActivity(intent1);
                     });
@@ -81,9 +82,9 @@ public class TableOfContentsActivity extends AppCompatActivity {
                         if (!t.getTest())
                             continue;
 
-                        FirebaseFirestore.getInstance().collection("results")
-                                .whereEqualTo("topic", t.getId())
-                                .whereEqualTo("user", EntityManager.getInstance().getLoggedInUser().getUid())
+                        FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME.dbName)
+                                .whereEqualTo(Constants.RESULT_FIELD_TOPIC.dbName, t.getId())
+                                .whereEqualTo(Constants.RESULT_FIELD_USER.dbName, EntityManager.getInstance().getLoggedInUser().getUid())
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
 
@@ -94,7 +95,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
                                         final Result result = buildResult(EntityManager.getInstance().getLoggedInUser().getUid(), t.getId());
 
                                         // TEST WITHOUT RESULT -- HAVE TO ADD A NEW
-                                        FirebaseFirestore.getInstance().collection("results")
+                                        FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME.dbName)
                                                 .add(result)
                                                 .addOnSuccessListener(documentReference -> {
                                                     // presist element

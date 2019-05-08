@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Learn 2 Code</string>
 
-    <string name="table_of_contents_unlocked">Start</string>
+    <string name="table_of_contents_start">Start</string>
     <string name="table_of_contents_locked">Locked</string>
     <string name="test_check_button">Check!</string>
     <string name="checxbox_incorrect">Incorrect answer</string>

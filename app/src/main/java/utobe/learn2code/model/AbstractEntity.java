@@ -4,8 +4,8 @@ import com.google.firebase.database.annotations.NotNull;
 
 import java.text.MessageFormat;
 
-import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.exception.PersistenceException;
+import utobe.learn2code.util.EntityManager;
 
 public abstract class AbstractEntity {
     private String id;

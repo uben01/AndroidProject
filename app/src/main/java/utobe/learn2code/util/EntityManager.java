@@ -1,4 +1,4 @@
-package utobe.learn2code.enititymanager;
+package utobe.learn2code.util;
 
 import com.google.firebase.auth.FirebaseUser;
 

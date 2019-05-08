@@ -3,6 +3,8 @@ package utobe.learn2code.model;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import utobe.learn2code.util.Constants;
+
 public class Result extends AbstractEntity {
     private String user;
     private String topic;
@@ -13,9 +15,9 @@ public class Result extends AbstractEntity {
     private Result(DocumentSnapshot document) {
         super(document.getId());
 
-        user = document.getString("user");
-        topic = document.getString("topic");
-        result = document.getDouble("result");
+        user = document.getString(Constants.RESULT_FIELD_USER.dbName);
+        topic = document.getString(Constants.RESULT_FIELD_TOPIC.dbName);
+        result = document.getDouble(Constants.RESULT_FIELD_RESULT.dbName);
         pageCounter = ((Topic) entityManager.getEntity(topic)).getPageNumber();
     }
 

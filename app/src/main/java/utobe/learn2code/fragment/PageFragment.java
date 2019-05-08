@@ -3,6 +3,7 @@ package utobe.learn2code.fragment;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.text.HtmlCompat;
@@ -17,11 +18,12 @@ import android.widget.TextView;
 
 import utobe.learn2code.R;
 import utobe.learn2code.activity.TopicActivity;
-import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.Result;
 import utobe.learn2code.model.TestPage;
 import utobe.learn2code.model.Topic;
+import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class PageFragment extends Fragment {
     private String pageId;
@@ -34,8 +36,8 @@ public class PageFragment extends Fragment {
     public static PageFragment newInstance(String pageId, boolean isTest) {
         PageFragment fragment = new PageFragment();
         Bundle args = new Bundle();
-        args.putString("PageId", pageId);
-        args.putBoolean("IsTest", isTest);
+        args.putString(Constants.ABSTRACT_ENTITY_ID.dbName, pageId);
+        args.putBoolean(Constants.TOPIC_FIELD_IS_TEST.dbName, isTest);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,8 +45,13 @@ public class PageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageId = getArguments().getString("PageId");
-        isTest = getArguments().getBoolean("IsTest");
+        pageId = getArguments().getString(Constants.ABSTRACT_ENTITY_ID.dbName);
+        isTest = getArguments().getBoolean(Constants.TOPIC_FIELD_IS_TEST.dbName);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
@@ -59,9 +66,13 @@ public class PageFragment extends Fragment {
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab_next_topic);
         fab.setOnClickListener(v -> {
-            ViewPager viewPager = ((TopicActivity) getActivity()).getmViewPager();
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-            // TODO: last item -> back to TOC
+            TopicActivity activity = (TopicActivity) getActivity();
+            ViewPager viewPager = ((TopicActivity) getActivity()).getViewPager();
+            if (activity.getItemCount() != viewPager.getCurrentItem() + 1) {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            } else {
+                activity.finish();
+            }
         });
 
         if (isTest) {
@@ -80,7 +91,7 @@ public class PageFragment extends Fragment {
 
             final CheckBox[] buttons = {A, B, C, D};
 
-            final String[] chars = {"A", "B", "C", "D"};
+            final String[] chars = {Constants.PAGE_FIELD_A.dbName, Constants.PAGE_FIELD_B.dbName, Constants.PAGE_FIELD_C.dbName, Constants.PAGE_FIELD_D.dbName};
             Button runTest = rootView.findViewById(R.id.button_check);
             runTest.setOnClickListener(v -> {
                 int errCounter = 0;

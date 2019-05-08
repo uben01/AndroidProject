@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Collections;
 
-import utobe.learn2code.enititymanager.EntityManager;
+import utobe.learn2code.util.EntityManager;
 
 public class LoginActivity extends AppCompatActivity {
     private final static int RC_SIGN_IN = 1;

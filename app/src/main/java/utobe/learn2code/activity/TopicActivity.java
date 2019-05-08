@@ -13,12 +13,13 @@ import java.util.ArrayList;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TopicAdapter;
-import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.TestPage;
 import utobe.learn2code.model.Topic;
+import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class TopicActivity extends AppCompatActivity {
     private TopicAdapter mTopicAdapter;
@@ -35,12 +36,12 @@ public class TopicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        Language language = (Language) EntityManager.getInstance().getEntity(extras.getString("language"));
-        topic = (Topic) EntityManager.getInstance().getEntity(extras.getString("topic"));
+        Language language = (Language) EntityManager.getInstance().getEntity(extras.getString(Constants.LANGUAGE_ENTITY_NAME.dbName));
+        topic = (Topic) EntityManager.getInstance().getEntity(extras.getString(Constants.TOPIC_ENTITY_NAME.dbName));
 
-        FirebaseFirestore.getInstance().collection("pages")
-                .whereEqualTo("parent", topic.getId())
-                .orderBy("serialNumber", Query.Direction.ASCENDING)
+        FirebaseFirestore.getInstance().collection(Constants.PAGE_ENTITY_SET_NAME.dbName)
+                .whereEqualTo(Constants.PAGE_FIELD_PARENT.dbName, topic.getId())
+                .orderBy(Constants.PAGE_FIELD_SERIAL_NUMBER.dbName, Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<Page> pages = new ArrayList<>();
@@ -66,7 +67,6 @@ public class TopicActivity extends AppCompatActivity {
 
                             @Override
                             public void onPageSelected(int i) {
-
                             }
 
                             @Override
@@ -84,8 +84,12 @@ public class TopicActivity extends AppCompatActivity {
 
     }
 
-    public ViewPager getmViewPager() {
+    public ViewPager getViewPager() {
         return mViewPager;
+    }
+
+    public int getItemCount() {
+        return mTopicAdapter.getCount();
     }
 }
 

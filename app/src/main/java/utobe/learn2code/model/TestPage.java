@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import utobe.learn2code.exception.PersistenceException;
+import utobe.learn2code.util.Constants;
 
 public class TestPage extends Page {
     private final String A, B, C, D;
@@ -15,11 +16,11 @@ public class TestPage extends Page {
     private TestPage(QueryDocumentSnapshot document) throws PersistenceException {
         super(document);
 
-        A = document.getString("A");
-        B = document.getString("B");
-        C = document.getString("C");
-        D = document.getString("D");
-        correct = document.getString("correct").toCharArray();
+        A = document.getString(Constants.PAGE_FIELD_A.dbName);
+        B = document.getString(Constants.PAGE_FIELD_B.dbName);
+        C = document.getString(Constants.PAGE_FIELD_C.dbName);
+        D = document.getString(Constants.PAGE_FIELD_D.dbName);
+        correct = document.getString(Constants.PAGE_FIELD_CORRECT.dbName).toCharArray();
 
         if (A == null || B == null || C == null || D == null || correct == null)
             throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));

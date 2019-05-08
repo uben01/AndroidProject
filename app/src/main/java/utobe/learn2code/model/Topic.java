@@ -5,10 +5,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import utobe.learn2code.util.Constants;
+
 public class Topic extends AbstractEntity {
     private String title;
     private Boolean isTest;
-    private Boolean isUnlocked;
     private String parent;
     private Long serialNumber;
 
@@ -18,11 +19,10 @@ public class Topic extends AbstractEntity {
 
     private Topic(QueryDocumentSnapshot document) {
         super(document.getId());
-        title = document.getString("title");
-        isTest = document.getBoolean("isTest");
-        parent = document.getString("parent");
-        isUnlocked = document.getBoolean("isUnlocked");
-        serialNumber = document.getLong("serialNumber");
+        title = document.getString(Constants.TOPIC_FIELD_TITLE.dbName);
+        isTest = document.getBoolean(Constants.TOPIC_FIELD_IS_TEST.dbName);
+        parent = document.getString(Constants.TOPIC_FIELD_PARENT.dbName);
+        serialNumber = document.getLong(Constants.TOPIC_FIELD_SERIAL_NUMBER.dbName);
     }
 
     public static ArrayList<Topic> buildTopics(QuerySnapshot documents) {
@@ -57,14 +57,6 @@ public class Topic extends AbstractEntity {
 
     public void setTest(Boolean test) {
         isTest = test;
-    }
-
-    public Boolean getUnlocked() {
-        return isUnlocked;
-    }
-
-    public void setUnlocked(Boolean unlocked) {
-        isUnlocked = unlocked;
     }
 
     public String getParent() {

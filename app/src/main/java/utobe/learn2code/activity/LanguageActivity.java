@@ -3,12 +3,14 @@ package utobe.learn2code.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -16,10 +18,15 @@ import utobe.learn2code.R;
 import utobe.learn2code.adapter.LanguageSelectAdapter;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
+import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class LanguageActivity extends AppCompatActivity {
 
     private final Activity gThis = this;
+    LanguageSelectAdapter adapter;
+    ArrayList<Language> languages;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,33 +36,58 @@ public class LanguageActivity extends AppCompatActivity {
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-        float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
-        final int elementCount = (int) Math.floor(screenWidth / 110.0);
+        final float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
+        final int elementsInRow = (int) Math.floor(screenWidth / 110.0);
 
+        fab = findViewById(R.id.fab_add_language);
         final RecyclerView view = findViewById(R.id.langContainer);
 
-        FirebaseFirestore.getInstance().collection("languages")
+        languages = new ArrayList<>();
+        adapter = new LanguageSelectAdapter(gThis, languages);
+        view.setLayoutManager(new GridLayoutManager(gThis, elementsInRow));
+
+        view.setAdapter(adapter);
+        adapter.setClickListener((view1, position) -> {
+            Language selected = adapter.getItem(position);
+            Intent intent = new Intent(gThis, TableOfContentsActivity.class);
+            intent.putExtra(Constants.ABSTRACT_ENTITY_ID.dbName, selected.getId());
+
+            startActivity(intent);
+        });
+
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(gThis, AddLanguageActivity.class));
+        });
+
+        /*
+            PUBLISHED
+            or
+            NOT PUBLISHED but CREATED BY <ME>
+         */
+        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, true)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    try {
-                        ArrayList<Language> languages = new ArrayList<>(Language.buildLanguages(queryDocumentSnapshots));
+                .addOnSuccessListener(querySnapshots -> {
+                    addLanguagesAndNotify(querySnapshots);
+                }).continueWithTask(
+                task -> FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
+                        .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, false)
+                        .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY.dbName, EntityManager.getInstance().getLoggedInUser())
+                        .get()
+                        .addOnSuccessListener(querySnapshots -> {
+                            addLanguagesAndNotify(querySnapshots);
+                        })
+        );
+    }
 
-                        final LanguageSelectAdapter adapter;
-                        view.setLayoutManager(new GridLayoutManager(gThis, elementCount));
-
-                        adapter = new LanguageSelectAdapter(gThis, languages);
-                        adapter.setClickListener((view1, position) -> {
-                            Language selected = adapter.getItem(position);
-                            Intent intent = new Intent(gThis, TableOfContentsActivity.class);
-                            intent.putExtra("id", selected.getId());
-
-                            startActivity(intent);
-                        });
-                        view.setAdapter(adapter);
-                    } catch (PersistenceException e) {
-                        // TODO
-                    }
-                });
+    private synchronized void addLanguagesAndNotify(QuerySnapshot querySnapshots) {
+        try {
+            int numOfLanguages = languages.size();
+            languages.addAll(Language.buildLanguages(querySnapshots));
+            adapter.notifyItemRangeInserted(numOfLanguages, languages.size());
+        } catch (PersistenceException e) {
+            // TODO:
+        }
     }
 }
 

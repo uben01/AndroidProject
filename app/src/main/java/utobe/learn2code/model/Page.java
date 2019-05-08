@@ -6,6 +6,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import utobe.learn2code.util.Constants;
+
 public class Page extends AbstractEntity {
     private final String title;
     private final String text;
@@ -16,10 +18,10 @@ public class Page extends AbstractEntity {
 
     Page(QueryDocumentSnapshot document) {
         super(document.getId());
-        title = document.getString("title");
-        text = document.getString("text");
-        parent = document.getString("parent");
-        serialNumber = document.getLong("serialNumber");
+        title = document.getString(Constants.PAGE_FIELD_TITLE.dbName);
+        text = document.getString(Constants.PAGE_FIELD_TEXT.dbName);
+        parent = document.getString(Constants.PAGE_FIELD_PARENT.dbName);
+        serialNumber = document.getLong(Constants.PAGE_FIELD_SERIAL_NUMBER.dbName);
 
         ((Topic) entityManager.getEntity(parent)).addPage(this);
     }
