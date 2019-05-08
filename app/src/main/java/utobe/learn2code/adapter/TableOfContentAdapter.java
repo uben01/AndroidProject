@@ -92,8 +92,8 @@ public class TableOfContentAdapter extends
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.topic_name);
-            myButton = itemView.findViewById(R.id.topic_button);
+            myTextView = itemView.findViewById(R.id.et_topic_name);
+            myButton = itemView.findViewById(R.id.button_topic);
 
             myButton.setOnClickListener(this);
         }

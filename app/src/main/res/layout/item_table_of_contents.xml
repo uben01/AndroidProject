@@ -7,13 +7,13 @@
     android:paddingBottom="10dp">
 
     <TextView
-        android:id="@+id/topic_name"
+        android:id="@+id/et_topic_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/topic_button"
+        android:id="@+id/button_topic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"

@@ -7,15 +7,46 @@
     android:orientation="vertical"
     tools:context=".activity.AddLanguageActivity">
 
-    <TextView
-        android:id="@+id/textView2"
+    <EditText
+        android:id="@+id/et_lang_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:clickable="true"
+        android:focusable="auto"
+        android:gravity="clip_horizontal|clip_vertical"
+        android:hint="Language Name"
+        android:inputType="text" />
 
-    <ImageButton
-        android:id="@+id/button_upload"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_upload" />
+        android:layout_marginTop="20dp"
+        android:gravity="clip_horizontal|center|clip_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="upload"
+            app:srcCompat="@android:drawable/ic_menu_upload" />
+
+        <TextView
+            android:id="@+id/txt_upload_svg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Upload SVG file as icon" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_add_language_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:enabled="false"
+        android:foregroundGravity="bottom|center"
+        android:text="Next" />
+
 </LinearLayout>

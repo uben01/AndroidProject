@@ -54,7 +54,7 @@ public class TopicActivity extends AppCompatActivity {
                         topic.setPages(pages);
 
                         // Set up the ViewPager with the sections adapter.
-                        mViewPager = findViewById(R.id.container);
+                        mViewPager = findViewById(R.id.vp_topic);
 
                         mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages, topic.getTest(), mViewPager);
                         mViewPager.setAdapter(mTopicAdapter);
@@ -74,7 +74,7 @@ public class TopicActivity extends AppCompatActivity {
 
                             }
                         });
-                        final TabLayout tabLayout = findViewById(R.id.view_pager_tab);
+                        final TabLayout tabLayout = findViewById(R.id.vp_tab_topic);
                         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
                     } catch (PersistenceException e) {
                         // TODO

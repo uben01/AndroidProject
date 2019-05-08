@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/langItem"
+    android:id="@+id/i_language"
     android:layout_width="100dp"
     android:layout_height="150dp"
     android:layout_marginStart="10dp"
@@ -13,7 +13,7 @@
         android:layout_height="100dp">
 
         <com.caverock.androidsvg.SVGImageView
-            android:id="@+id/langItemIcon"
+            android:id="@+id/img_item_language"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +24,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <TextView
-        android:id="@+id/langItemTitle"
+        android:id="@+id/txt_item_language"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:gravity="center|end"

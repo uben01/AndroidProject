@@ -6,19 +6,19 @@
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/lo_topic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/page_text"
+            android:id="@+id/txt_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin" />
 
         <ScrollView
-            android:id="@+id/testBlock"
+            android:id="@+id/sv_test_block"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
@@ -29,25 +29,25 @@
                 android:orientation="vertical">
 
                 <CheckBox
-                    android:id="@+id/answer_A"
+                    android:id="@+id/txt_answer_A"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <CheckBox
-                    android:id="@+id/answer_B"
+                    android:id="@+id/txt_answer_B"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <CheckBox
-                    android:id="@+id/answer_C"
+                    android:id="@+id/txt_answer_C"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <CheckBox
-                    android:id="@+id/answer_D"
+                    android:id="@+id/txt_answer_D"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />

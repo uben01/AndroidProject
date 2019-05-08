@@ -51,7 +51,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
 
         final Language l = (Language) EntityManager.getInstance().getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID.dbName));
-        view = findViewById(R.id.topicsTable);
+        view = findViewById(R.id.rv_topics);
 
         FirebaseFirestore.getInstance().collection(Constants.TOPIC_ENTITY_SET_NAME.dbName)
                 .whereEqualTo(Constants.TOPIC_FIELD_PARENT.dbName, l.getId())

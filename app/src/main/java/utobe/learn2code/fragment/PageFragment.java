@@ -59,7 +59,7 @@ public class PageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
-        TextView textView = rootView.findViewById(R.id.page_text);
+        TextView textView = rootView.findViewById(R.id.txt_page);
 
         String text = ((Page) EntityManager.getInstance().getEntity(pageId)).getText();
         textView.setText(HtmlCompat.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
@@ -77,16 +77,16 @@ public class PageFragment extends Fragment {
 
         if (isTest) {
             final TestPage page = (TestPage) EntityManager.getInstance().getEntity(pageId);
-            final View block = rootView.findViewById(R.id.testBlock);
+            final View block = rootView.findViewById(R.id.sv_test_block);
             block.setVisibility(View.VISIBLE);
 
-            final CheckBox A = block.findViewById(R.id.answer_A);
+            final CheckBox A = block.findViewById(R.id.txt_answer_A);
             A.setText(page.getA());
-            final CheckBox B = block.findViewById(R.id.answer_B);
+            final CheckBox B = block.findViewById(R.id.txt_answer_B);
             B.setText(page.getB());
-            final CheckBox C = block.findViewById(R.id.answer_C);
+            final CheckBox C = block.findViewById(R.id.txt_answer_C);
             C.setText(page.getC());
-            final CheckBox D = block.findViewById(R.id.answer_D);
+            final CheckBox D = block.findViewById(R.id.txt_answer_D);
             D.setText(page.getD());
 
             final CheckBox[] buttons = {A, B, C, D};

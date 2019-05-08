@@ -19,7 +19,6 @@ import utobe.learn2code.adapter.LanguageSelectAdapter;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.util.Constants;
-import utobe.learn2code.util.EntityManager;
 
 public class LanguageActivity extends AppCompatActivity {
 
@@ -34,13 +33,35 @@ public class LanguageActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_language);
 
+        /*
+            PUBLISHED
+            or
+            NOT PUBLISHED but CREATED BY <ME>
+         */
+        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, true)
+                .get()
+                .addOnSuccessListener(querySnapshots -> {
+                    addLanguagesAndNotify(querySnapshots);
+
+                });
+       /* ERROR
+       FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, false)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY.dbName, EntityManager.getInstance().getLoggedInUser())
+                .get()
+                .addOnSuccessListener(querySnapshots2 -> {
+                    addLanguagesAndNotify(querySnapshots2);
+                });*/
+
+
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         final float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
         final int elementsInRow = (int) Math.floor(screenWidth / 110.0);
 
         fab = findViewById(R.id.fab_add_language);
-        final RecyclerView view = findViewById(R.id.langContainer);
+        final RecyclerView view = findViewById(R.id.rv_language);
 
         languages = new ArrayList<>();
         adapter = new LanguageSelectAdapter(gThis, languages);
@@ -59,25 +80,6 @@ public class LanguageActivity extends AppCompatActivity {
             startActivity(new Intent(gThis, AddLanguageActivity.class));
         });
 
-        /*
-            PUBLISHED
-            or
-            NOT PUBLISHED but CREATED BY <ME>
-         */
-        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
-                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, true)
-                .get()
-                .addOnSuccessListener(querySnapshots -> {
-                    addLanguagesAndNotify(querySnapshots);
-                }).continueWithTask(
-                task -> FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
-                        .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, false)
-                        .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY.dbName, EntityManager.getInstance().getLoggedInUser())
-                        .get()
-                        .addOnSuccessListener(querySnapshots -> {
-                            addLanguagesAndNotify(querySnapshots);
-                        })
-        );
     }
 
     private synchronized void addLanguagesAndNotify(QuerySnapshot querySnapshots) {

@@ -3,12 +3,12 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/languageLayout"
+    android:id="@+id/lo_language"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/langContainer"
+        android:id="@+id/rv_language"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="5dp">

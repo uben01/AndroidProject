@@ -71,8 +71,8 @@ public class LanguageSelectAdapter extends
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.langItemTitle);
-            myImageView = itemView.findViewById(R.id.langItemIcon);
+            myTextView = itemView.findViewById(R.id.txt_item_language);
+            myImageView = itemView.findViewById(R.id.img_item_language);
             itemView.setOnClickListener(this);
         }
 
