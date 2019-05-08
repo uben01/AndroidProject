@@ -12,7 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
-import utobe.learn2code.adapter.TableOfContentAdapterI;
+import utobe.learn2code.adapter.TableOfContentAdapter;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Result;
@@ -25,7 +25,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
     private final Activity gThis = this;
 
     private RecyclerView view;
-    private TableOfContentAdapterI mAdapter;
+    private TableOfContentAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class TableOfContentsActivity extends AppCompatActivity {
                     ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
                     ArrayList<String> topicIds = new ArrayList<>();
 
-                    mAdapter = new TableOfContentAdapterI(gThis, topicIds);
+                    mAdapter = new TableOfContentAdapter(gThis, topicIds);
 
                     mAdapter.setClickListener((view, position) -> {
                         Topic selected = mAdapter.getItem(position);

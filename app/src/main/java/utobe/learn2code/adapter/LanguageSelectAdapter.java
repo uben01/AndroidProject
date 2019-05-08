@@ -19,15 +19,15 @@ import java.util.List;
 import utobe.learn2code.R;
 import utobe.learn2code.model.Language;
 
-public class LanguageSelectAdapterI extends
-        RecyclerView.Adapter<LanguageSelectAdapterI.ViewHolder> implements IAbstractAdapter {
+public class LanguageSelectAdapter extends
+        RecyclerView.Adapter<LanguageSelectAdapter.ViewHolder> implements IAbstractAdapter {
 
     private final List<Language> mData;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public LanguageSelectAdapterI(Context context, List<Language> data) {
+    public LanguageSelectAdapter(Context context, List<Language> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }

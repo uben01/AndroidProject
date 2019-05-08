@@ -13,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
-import utobe.learn2code.adapter.LanguageSelectAdapterI;
+import utobe.learn2code.adapter.LanguageSelectAdapter;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 
@@ -40,10 +40,10 @@ public class LanguageActivity extends AppCompatActivity {
                     try {
                         ArrayList<Language> languages = new ArrayList<>(Language.buildLanguages(queryDocumentSnapshots));
 
-                        final LanguageSelectAdapterI adapter;
+                        final LanguageSelectAdapter adapter;
                         view.setLayoutManager(new GridLayoutManager(gThis, elementCount));
 
-                        adapter = new LanguageSelectAdapterI(gThis, languages);
+                        adapter = new LanguageSelectAdapter(gThis, languages);
                         adapter.setClickListener((view1, position) -> {
                             Language selected = adapter.getItem(position);
                             Intent intent = new Intent(gThis, TableOfContentsActivity.class);

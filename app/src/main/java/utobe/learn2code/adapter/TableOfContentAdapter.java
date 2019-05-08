@@ -21,15 +21,15 @@ import utobe.learn2code.R;
 import utobe.learn2code.model.Result;
 import utobe.learn2code.model.Topic;
 
-public class TableOfContentAdapterI extends
-        RecyclerView.Adapter<TableOfContentAdapterI.ViewHolder> implements IAbstractAdapter {
+public class TableOfContentAdapter extends
+        RecyclerView.Adapter<TableOfContentAdapter.ViewHolder> implements IAbstractAdapter {
 
     private final ArrayList<String> mData;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public TableOfContentAdapterI(Context context, ArrayList<String> data) {
+    public TableOfContentAdapter(Context context, ArrayList<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }

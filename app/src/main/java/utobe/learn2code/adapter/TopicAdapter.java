@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import utobe.learn2code.fragment.PageFragment;
 import utobe.learn2code.model.Page;
 
-public class TopicAdapterI extends SmartFragmentStatePagerAdapterI implements IAbstractAdapter {
+public class TopicAdapter extends SmartFragmentStatePagerAdapter implements IAbstractAdapter {
     private final ArrayList<Page> pages;
     private final boolean isTest;
     private final ViewPager vPager;
 
-    public TopicAdapterI(FragmentManager fm, ArrayList<Page> pages, boolean isTest, ViewPager mViewPager) {
+    public TopicAdapter(FragmentManager fm, ArrayList<Page> pages, boolean isTest, ViewPager mViewPager) {
         super(fm);
         this.pages = pages;
         this.isTest = isTest;

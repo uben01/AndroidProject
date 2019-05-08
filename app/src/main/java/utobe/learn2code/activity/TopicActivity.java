@@ -12,7 +12,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
-import utobe.learn2code.adapter.TopicAdapterI;
+import utobe.learn2code.adapter.TopicAdapter;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
@@ -21,7 +21,7 @@ import utobe.learn2code.model.TestPage;
 import utobe.learn2code.model.Topic;
 
 public class TopicActivity extends AppCompatActivity {
-    private TopicAdapterI mTopicAdapter;
+    private TopicAdapter mTopicAdapter;
     private ViewPager mViewPager;
 
     private Topic topic;
@@ -55,7 +55,7 @@ public class TopicActivity extends AppCompatActivity {
                         // Set up the ViewPager with the sections adapter.
                         mViewPager = findViewById(R.id.container);
 
-                        mTopicAdapter = new TopicAdapterI(getSupportFragmentManager(), pages, topic.getTest(), mViewPager);
+                        mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages, topic.getTest(), mViewPager);
                         mViewPager.setAdapter(mTopicAdapter);
 
                         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -84,6 +84,8 @@ public class TopicActivity extends AppCompatActivity {
 
     }
 
-
+    public ViewPager getmViewPager() {
+        return mViewPager;
+    }
 }
 

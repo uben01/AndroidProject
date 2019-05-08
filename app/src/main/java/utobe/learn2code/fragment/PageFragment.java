@@ -3,8 +3,10 @@ package utobe.learn2code.fragment;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.text.HtmlCompat;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import utobe.learn2code.R;
+import utobe.learn2code.activity.TopicActivity;
 import utobe.learn2code.enititymanager.EntityManager;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.Result;
@@ -53,6 +56,13 @@ public class PageFragment extends Fragment {
 
         String text = ((Page) EntityManager.getInstance().getEntity(pageId)).getText();
         textView.setText(HtmlCompat.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
+
+        FloatingActionButton fab = rootView.findViewById(R.id.fab_next_topic);
+        fab.setOnClickListener(v -> {
+            ViewPager viewPager = ((TopicActivity) getActivity()).getmViewPager();
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            // TODO: last item -> back to TOC
+        });
 
         if (isTest) {
             final TestPage page = (TestPage) EntityManager.getInstance().getEntity(pageId);
