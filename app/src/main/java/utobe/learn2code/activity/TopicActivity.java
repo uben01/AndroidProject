@@ -19,9 +19,8 @@ import utobe.learn2code.model.Page;
 import utobe.learn2code.model.TestPage;
 import utobe.learn2code.model.Topic;
 import utobe.learn2code.util.Constants;
-import utobe.learn2code.util.EntityManager;
 
-public class TopicActivity extends AppCompatActivity {
+public class TopicActivity extends AppCompatActivity implements IAbstractActivity {
     private TopicAdapter mTopicAdapter;
     private ViewPager mViewPager;
 
@@ -36,20 +35,20 @@ public class TopicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        Language language = (Language) EntityManager.getInstance().getEntity(extras.getString(Constants.LANGUAGE_ENTITY_NAME.dbName));
-        topic = (Topic) EntityManager.getInstance().getEntity(extras.getString(Constants.TOPIC_ENTITY_NAME.dbName));
+        Language language = (Language) entityManager.getEntity(extras.getString(Constants.LANGUAGE_ENTITY_NAME));
+        topic = (Topic) entityManager.getEntity(extras.getString(Constants.TOPIC_ENTITY_NAME));
 
-        FirebaseFirestore.getInstance().collection(Constants.PAGE_ENTITY_SET_NAME.dbName)
-                .whereEqualTo(Constants.PAGE_FIELD_PARENT.dbName, topic.getId())
-                .orderBy(Constants.PAGE_FIELD_SERIAL_NUMBER.dbName, Query.Direction.ASCENDING)
+        FirebaseFirestore.getInstance().collection(Constants.PAGE_ENTITY_SET_NAME)
+                .whereEqualTo(Constants.PAGE_FIELD_PARENT, topic.getId())
+                .orderBy(Constants.PAGE_FIELD_SERIAL_NUMBER, Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<Page> pages = new ArrayList<>();
                     try {
                         if (!topic.getTest()) {
-                            pages.addAll(Page.buildPages(queryDocumentSnapshots));
+                            pages.addAll(Page.buildPagesFromDB(queryDocumentSnapshots));
                         } else {
-                            pages.addAll(TestPage.buildTestPages(queryDocumentSnapshots));
+                            pages.addAll(TestPage.buildTestPagesFromDB(queryDocumentSnapshots));
                         }
                         topic.setPages(pages);
 
@@ -77,7 +76,7 @@ public class TopicActivity extends AppCompatActivity {
                         final TabLayout tabLayout = findViewById(R.id.vp_tab_topic);
                         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
                     } catch (PersistenceException e) {
-                        // TODO
+                        //TODO: SnackBar
                     }
                 });
 

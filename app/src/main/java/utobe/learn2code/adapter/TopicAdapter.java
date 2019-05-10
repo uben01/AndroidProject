@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 
 import java.util.ArrayList;
 
-import utobe.learn2code.fragment.PageFragment;
+import utobe.learn2code.activity.fragment.PageFragment;
 import utobe.learn2code.model.Page;
 
 public class TopicAdapter extends SmartFragmentStatePagerAdapter implements IAbstractAdapter {

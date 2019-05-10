@@ -21,9 +21,8 @@ import java.util.Map;
 
 import utobe.learn2code.R;
 import utobe.learn2code.util.Constants;
-import utobe.learn2code.util.EntityManager;
 
-public class AddLanguageActivity extends AppCompatActivity {
+public class AddLanguageActivity extends AppCompatActivity implements IAbstractActivity {
     private static final int PICK_FILE_REQUEST = 1;
 
     Button button_next;
@@ -89,13 +88,13 @@ public class AddLanguageActivity extends AppCompatActivity {
                     .putFile(uploadIconUri, metadata)
                     .addOnSuccessListener(taskSnapshot -> {
                         Map<String, Object> language = new HashMap<>();
-                        language.put(Constants.LANGUAGE_FIELD_CREATED_BY.dbName, EntityManager.getInstance().getLoggedInUser().getUid());
-                        language.put(Constants.LANGUAGE_FIELD_ICON.dbName, "/icons/" + entry_iconName);
-                        language.put(Constants.LANGUAGE_FIELD_NAME.dbName, entry_name);
-                        language.put(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, false);
+                        language.put(Constants.LANGUAGE_FIELD_CREATED_BY, entityManager.getLoggedInUser().getUid());
+                        language.put(Constants.LANGUAGE_FIELD_ICON, "/icons/" + entry_iconName);
+                        language.put(Constants.LANGUAGE_FIELD_NAME, entry_name);
+                        language.put(Constants.LANGUAGE_FIELD_PUBLISHED, false);
 
                         FirebaseFirestore.getInstance()
-                                .collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
+                                .collection(Constants.LANGUAGE_ENTITY_SET_NAME)
                                 .document()
                                 .set(language);
 

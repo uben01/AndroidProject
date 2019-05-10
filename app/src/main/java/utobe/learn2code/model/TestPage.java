@@ -16,17 +16,17 @@ public class TestPage extends Page {
     private TestPage(QueryDocumentSnapshot document) throws PersistenceException {
         super(document);
 
-        A = document.getString(Constants.PAGE_FIELD_A.dbName);
-        B = document.getString(Constants.PAGE_FIELD_B.dbName);
-        C = document.getString(Constants.PAGE_FIELD_C.dbName);
-        D = document.getString(Constants.PAGE_FIELD_D.dbName);
-        correct = document.getString(Constants.PAGE_FIELD_CORRECT.dbName).toCharArray();
+        A = document.getString(Constants.PAGE_FIELD_A);
+        B = document.getString(Constants.PAGE_FIELD_B);
+        C = document.getString(Constants.PAGE_FIELD_C);
+        D = document.getString(Constants.PAGE_FIELD_D);
+        correct = document.getString(Constants.PAGE_FIELD_CORRECT).toCharArray();
 
         if (A == null || B == null || C == null || D == null || correct == null)
             throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
     }
 
-    public static ArrayList<TestPage> buildTestPages(QuerySnapshot documents) throws PersistenceException {
+    public static ArrayList<TestPage> buildTestPagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<TestPage> testPages = new ArrayList<>();
         try {
             for (QueryDocumentSnapshot document : documents) {

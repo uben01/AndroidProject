@@ -1,4 +1,4 @@
-package utobe.learn2code.fragment;
+package utobe.learn2code.activity.fragment;
 
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import utobe.learn2code.R;
+import utobe.learn2code.activity.IAbstractActivity;
 import utobe.learn2code.activity.TopicActivity;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.Result;
@@ -25,7 +26,7 @@ import utobe.learn2code.model.Topic;
 import utobe.learn2code.util.Constants;
 import utobe.learn2code.util.EntityManager;
 
-public class PageFragment extends Fragment {
+public class PageFragment extends Fragment implements IAbstractActivity {
     private String pageId;
     private boolean isTest;
 
@@ -36,8 +37,8 @@ public class PageFragment extends Fragment {
     public static PageFragment newInstance(String pageId, boolean isTest) {
         PageFragment fragment = new PageFragment();
         Bundle args = new Bundle();
-        args.putString(Constants.ABSTRACT_ENTITY_ID.dbName, pageId);
-        args.putBoolean(Constants.TOPIC_FIELD_IS_TEST.dbName, isTest);
+        args.putString(Constants.ABSTRACT_ENTITY_ID, pageId);
+        args.putBoolean(Constants.TOPIC_FIELD_IS_TEST, isTest);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,8 +46,8 @@ public class PageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageId = getArguments().getString(Constants.ABSTRACT_ENTITY_ID.dbName);
-        isTest = getArguments().getBoolean(Constants.TOPIC_FIELD_IS_TEST.dbName);
+        pageId = getArguments().getString(Constants.ABSTRACT_ENTITY_ID);
+        isTest = getArguments().getBoolean(Constants.TOPIC_FIELD_IS_TEST);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class PageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
         TextView textView = rootView.findViewById(R.id.txt_page);
 
-        String text = ((Page) EntityManager.getInstance().getEntity(pageId)).getText();
+        String text = ((Page) entityManager.getEntity(pageId)).getText();
         textView.setText(HtmlCompat.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab_next_topic);
@@ -76,7 +77,7 @@ public class PageFragment extends Fragment {
         });
 
         if (isTest) {
-            final TestPage page = (TestPage) EntityManager.getInstance().getEntity(pageId);
+            final TestPage page = (TestPage) entityManager.getEntity(pageId);
             final View block = rootView.findViewById(R.id.sv_test_block);
             block.setVisibility(View.VISIBLE);
 
@@ -91,7 +92,7 @@ public class PageFragment extends Fragment {
 
             final CheckBox[] buttons = {A, B, C, D};
 
-            final String[] chars = {Constants.PAGE_FIELD_A.dbName, Constants.PAGE_FIELD_B.dbName, Constants.PAGE_FIELD_C.dbName, Constants.PAGE_FIELD_D.dbName};
+            final String[] chars = {Constants.PAGE_FIELD_A, Constants.PAGE_FIELD_B, Constants.PAGE_FIELD_C, Constants.PAGE_FIELD_D};
             Button runTest = rootView.findViewById(R.id.button_check);
             runTest.setOnClickListener(v -> {
                 int errCounter = 0;
@@ -111,7 +112,13 @@ public class PageFragment extends Fragment {
                     buttons[i].setEnabled(false);
                 }
                 page.setSubResult(1 - (errCounter / 4.0));
-                ((Result) EntityManager.getInstance().getEntity(((Topic) EntityManager.getInstance().getEntity(page.getParent())).getResult())).updateResult();
+
+                (
+                        (Result) entityManager
+                                .getEntity(((Topic) EntityManager.getInstance()
+                                        .getEntity(page.getParent())
+                                ).getResult())
+                ).updateResult();
             });
         }
 

@@ -3,6 +3,7 @@ package utobe.learn2code.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +14,13 @@ import java.util.ArrayList;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TableOfContentAdapter;
+import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Result;
 import utobe.learn2code.model.Topic;
 import utobe.learn2code.util.Constants;
-import utobe.learn2code.util.EntityManager;
 
-import static utobe.learn2code.model.Result.buildResult;
-
-public class TableOfContentsActivity extends AppCompatActivity {
+public class TableOfContentsActivity extends AppCompatActivity implements IAbstractActivity {
 
     private final Activity gThis = this;
 
@@ -50,15 +49,25 @@ public class TableOfContentsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        final Language l = (Language) EntityManager.getInstance().getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID.dbName));
+        final Language l = (Language) entityManager.getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID));
         view = findViewById(R.id.rv_topics);
 
-        FirebaseFirestore.getInstance().collection(Constants.TOPIC_ENTITY_SET_NAME.dbName)
-                .whereEqualTo(Constants.TOPIC_FIELD_PARENT.dbName, l.getId())
-                .orderBy(Constants.TOPIC_FIELD_SERIAL_NUMBER.dbName)
+        FloatingActionButton fab = findViewById(R.id.fab_add_topic);
+        if (l.getCreatedBy().equals(entityManager.getLoggedInUser().getUid())) {
+            fab.show();
+            fab.setOnClickListener(v -> {
+
+            });
+        } else {
+            fab.hide();
+        }
+
+        FirebaseFirestore.getInstance().collection(Constants.TOPIC_ENTITY_SET_NAME)
+                .whereEqualTo(Constants.TOPIC_FIELD_PARENT, l.getId())
+                .orderBy(Constants.TOPIC_FIELD_SERIAL_NUMBER)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<Topic> topics = Topic.buildTopics(queryDocumentSnapshots);
+                    ArrayList<Topic> topics = Topic.buildTopicsFromDB(queryDocumentSnapshots);
                     ArrayList<String> topicIds = new ArrayList<>();
 
                     mAdapter = new TableOfContentAdapter(gThis, topicIds);
@@ -66,51 +75,52 @@ public class TableOfContentsActivity extends AppCompatActivity {
                     mAdapter.setClickListener((view, position) -> {
                         Topic selected = mAdapter.getItem(position);
 
-                        Intent intent1 = new Intent(gThis, TopicActivity.class)
-                                .putExtra(Constants.LANGUAGE_ENTITY_NAME.dbName, selected.getParent())
-                                .putExtra(Constants.TOPIC_ENTITY_NAME.dbName, selected.getId());
+                        Intent selectTopicIntent = new Intent(gThis, TopicActivity.class)
+                                .putExtra(Constants.LANGUAGE_ENTITY_NAME, selected.getParent())
+                                .putExtra(Constants.TOPIC_ENTITY_NAME, selected.getId());
 
-                        startActivity(intent1);
+                        startActivity(selectTopicIntent);
                     });
 
                     view.setAdapter(mAdapter);
                     view.setLayoutManager(new LinearLayoutManager(gThis));
 
-                    for (Topic t : topics) {
-                        topicIds.add(t.getId());
+                    final String logedInUserId = entityManager.getLoggedInUser().getUid();
+                    FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME)
+                            .whereEqualTo(Constants.RESULT_FIELD_USER, logedInUserId)
+                            .get()
+                            .addOnSuccessListener(resultQuerySnapshot -> {
+                                ArrayList<Result> results = Result.buildResultsFromDB(resultQuerySnapshot);
 
-                        if (!t.getTest())
-                            continue;
+                                for (Result result : results) {
+                                    Topic parent = ((Topic) entityManager.getEntity(result.getTopic()));
+                                    parent.setResult(result.getId());
+                                }
+                                for (Topic tempTopic : topics) {
+                                    topicIds.add(tempTopic.getId());
+                                    Topic topic = (Topic) entityManager.getEntity(tempTopic.getId());
 
-                        FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME.dbName)
-                                .whereEqualTo(Constants.RESULT_FIELD_TOPIC.dbName, t.getId())
-                                .whereEqualTo(Constants.RESULT_FIELD_USER.dbName, EntityManager.getInstance().getLoggedInUser().getUid())
-                                .get()
-                                .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                                    if (topic.getResult() != null || !topic.getTest())
+                                        continue;
 
-                                    if (!queryDocumentSnapshots1.isEmpty()) {
-                                        // TEST WITH RESULT
-                                        t.setResult(buildResult(queryDocumentSnapshots1.getDocuments().get(0)).getId());
-                                    } else {
-                                        final Result result = buildResult(EntityManager.getInstance().getLoggedInUser().getUid(), t.getId());
+                                    Result resultForSelectedTopic = Result.buildResult(logedInUserId, topic.getId());
+                                    FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME)
+                                            .add(resultForSelectedTopic)
+                                            .addOnSuccessListener(documentReference -> {
+                                                // presist element
+                                                try {
+                                                    resultForSelectedTopic.setId(documentReference.getId());
+                                                    topic.setResult(resultForSelectedTopic.getId());
+                                                } catch (PersistenceException e) {
+                                                    //TODO: SnackBar
+                                                    e.printStackTrace();
+                                                }
+                                            });
 
-                                        // TEST WITHOUT RESULT -- HAVE TO ADD A NEW
-                                        FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME.dbName)
-                                                .add(result)
-                                                .addOnSuccessListener(documentReference -> {
-                                                    // presist element
-                                                    try {
-                                                        result.setId(documentReference.getId());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    t.setResult(result.getId());
-                                                });
-                                    }
-                                    mAdapter.notifyDataSetChanged();
-                                });
-                    }
+                                }
+                                mAdapter.notifyDataSetChanged();
 
+                            });
                 });
     }
 }

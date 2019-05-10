@@ -18,16 +18,16 @@ public class Language extends AbstractEntity {
     private Language(QueryDocumentSnapshot document) throws PersistenceException {
         super(document.getId());
 
-        name = document.getString(Constants.LANGUAGE_FIELD_NAME.dbName);
-        icon = document.getString(Constants.LANGUAGE_FIELD_ICON.dbName);
-        createdBy = document.getString(Constants.LANGUAGE_FIELD_CREATED_BY.dbName);
-        published = document.getBoolean(Constants.LANGUAGE_FIELD_PUBLISHED.dbName);
+        name = document.getString(Constants.LANGUAGE_FIELD_NAME);
+        icon = document.getString(Constants.LANGUAGE_FIELD_ICON);
+        createdBy = document.getString(Constants.LANGUAGE_FIELD_CREATED_BY);
+        published = document.getBoolean(Constants.LANGUAGE_FIELD_PUBLISHED);
 
         if (name == null || icon == null)
             throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
     }
 
-    public static ArrayList<Language> buildLanguages(QuerySnapshot documents) throws PersistenceException {
+    public static ArrayList<Language> buildLanguagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<Language> languages = new ArrayList<>();
         try {
             for (QueryDocumentSnapshot document : documents) {
@@ -47,5 +47,13 @@ public class Language extends AbstractEntity {
 
     public String getIcon() {
         return icon;
+    }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
     }
 }

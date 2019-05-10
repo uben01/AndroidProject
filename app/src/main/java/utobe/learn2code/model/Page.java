@@ -18,15 +18,15 @@ public class Page extends AbstractEntity {
 
     Page(QueryDocumentSnapshot document) {
         super(document.getId());
-        title = document.getString(Constants.PAGE_FIELD_TITLE.dbName);
-        text = document.getString(Constants.PAGE_FIELD_TEXT.dbName);
-        parent = document.getString(Constants.PAGE_FIELD_PARENT.dbName);
-        serialNumber = document.getLong(Constants.PAGE_FIELD_SERIAL_NUMBER.dbName);
+        title = document.getString(Constants.PAGE_FIELD_TITLE);
+        text = document.getString(Constants.PAGE_FIELD_TEXT);
+        parent = document.getString(Constants.PAGE_FIELD_PARENT);
+        serialNumber = document.getLong(Constants.PAGE_FIELD_SERIAL_NUMBER);
 
         ((Topic) entityManager.getEntity(parent)).addPage(this);
     }
 
-    public static ArrayList<Page> buildPages(QuerySnapshot documents) {
+    public static ArrayList<Page> buildPagesFromDB(QuerySnapshot documents) {
         ArrayList<Page> pages = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             Page page = new Page(document);

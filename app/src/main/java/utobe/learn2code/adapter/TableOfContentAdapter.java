@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,32 +47,31 @@ public class TableOfContentAdapter extends
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         // TODO: megszépíteni
-        Topic topic = (Topic) entityManager.getEntity(mData.get(position));
+        if (position % 2 == 1) {
+            holder.myRow.setBackgroundColor(0x0D009688);
+        }
 
+        Topic topic = (Topic) entityManager.getEntity(mData.get(position));
         SpannableStringBuilder title = new SpannableStringBuilder(topic.getTitle());
 
         if (topic.getTest()) {
 
             if (topic.getResult() != null) {
-                title
-                        .append(" ")
-                        .append(String.valueOf(Math.round(((Result) entityManager.getEntity(topic.getResult())).getResult() * 100)));
+                title.append(" ").append(String.valueOf(Math.round(((Result) entityManager.getEntity(topic.getResult())).getResult() * 100)));
             } else {
                 title.append(" 0");
             }
             title.append("%");
 
-            int startIndex = topic.getTitle().length();
-            int endIndex = topic.getTitle().length();
+            final int startIndex = topic.getTitle().length();
+            final int endIndex = topic.getTitle().length();
 
             title.setSpan(new StyleSpan(Typeface.BOLD), startIndex, endIndex, 0);
             title.setSpan(new ForegroundColorSpan(Color.rgb(70, 130, 180)), startIndex, endIndex, 0);
         }
 
-
         holder.myTextView.setText(title);
         holder.myButton.setText(R.string.table_of_contents_start);
-
     }
 
     // total number of cells
@@ -89,11 +89,13 @@ public class TableOfContentAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView myTextView;
         final Button myButton;
+        final LinearLayout myRow;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.et_topic_name);
             myButton = itemView.findViewById(R.id.button_topic);
+            myRow = itemView.findViewById(R.id.lo_table_of_contents_item);
 
             myButton.setOnClickListener(this);
         }

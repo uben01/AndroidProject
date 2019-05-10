@@ -43,8 +43,10 @@ public class LanguageSelectAdapter extends
     // binds the data to the TextView in each cell
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-
-        holder.myTextView.setText(mData.get(position).getName());
+        if (!mData.get(position).getPublished()) {
+            holder.notPublishedView.setVisibility(View.VISIBLE);
+        }
+        holder.titleView.setText(mData.get(position).getName());
         FirebaseStorage.getInstance().getReference(mData.get(position).getIcon())
                 .getBytes(1024 * 5)
                 .addOnSuccessListener(bytes -> {
@@ -66,12 +68,14 @@ public class LanguageSelectAdapter extends
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView myTextView;
+        final TextView titleView;
+        final TextView notPublishedView;
         final SVGImageView myImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.txt_item_language);
+            titleView = itemView.findViewById(R.id.txt_item_language);
+            notPublishedView = itemView.findViewById(R.id.txt_item_language_not_published);
             myImageView = itemView.findViewById(R.id.img_item_language);
             itemView.setOnClickListener(this);
         }

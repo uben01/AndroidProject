@@ -19,17 +19,16 @@ public class Topic extends AbstractEntity {
 
     private Topic(QueryDocumentSnapshot document) {
         super(document.getId());
-        title = document.getString(Constants.TOPIC_FIELD_TITLE.dbName);
-        isTest = document.getBoolean(Constants.TOPIC_FIELD_IS_TEST.dbName);
-        parent = document.getString(Constants.TOPIC_FIELD_PARENT.dbName);
-        serialNumber = document.getLong(Constants.TOPIC_FIELD_SERIAL_NUMBER.dbName);
+        title = document.getString(Constants.TOPIC_FIELD_TITLE);
+        isTest = document.getBoolean(Constants.TOPIC_FIELD_IS_TEST);
+        parent = document.getString(Constants.TOPIC_FIELD_PARENT);
+        serialNumber = document.getLong(Constants.TOPIC_FIELD_SERIAL_NUMBER);
     }
 
-    public static ArrayList<Topic> buildTopics(QuerySnapshot documents) {
+    public static ArrayList<Topic> buildTopicsFromDB(QuerySnapshot documents) {
         ArrayList<Topic> topics = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            Topic topic = new Topic(document);
-            topics.add(topic);
+            topics.add(new Topic(document));
         }
 
         return topics;

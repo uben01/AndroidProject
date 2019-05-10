@@ -2,6 +2,9 @@ package utobe.learn2code.model;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 import utobe.learn2code.util.Constants;
 
@@ -10,32 +13,35 @@ public class Result extends AbstractEntity {
     private String topic;
     private Double result;
 
-    private final Integer pageCounter;
-
     private Result(DocumentSnapshot document) {
         super(document.getId());
 
-        user = document.getString(Constants.RESULT_FIELD_USER.dbName);
-        topic = document.getString(Constants.RESULT_FIELD_TOPIC.dbName);
-        result = document.getDouble(Constants.RESULT_FIELD_RESULT.dbName);
-        pageCounter = ((Topic) entityManager.getEntity(topic)).getPageNumber();
+        user = document.getString(Constants.RESULT_FIELD_USER);
+        topic = document.getString(Constants.RESULT_FIELD_TOPIC);
+        result = document.getDouble(Constants.RESULT_FIELD_RESULT);
     }
 
     private Result(String user, String topic) {
-
         this.user = user;
         this.topic = topic;
         this.result = 0.0;
-        pageCounter = ((Topic) entityManager.getEntity(topic)).getPageNumber();
     }
 
-    public static Result buildResult(DocumentSnapshot document) {
-        return new Result(document);
+    public Result() {
     }
 
     // have to persist later
-    public static Result buildResult(String user, String page) {
-        return new Result(user, page);
+    public static Result buildResult(String user, String topic) {
+        return new Result(user, topic);
+    }
+
+    public static ArrayList<Result> buildResultsFromDB(QuerySnapshot querySnapshot) {
+        ArrayList<Result> results = new ArrayList<>();
+        for (DocumentSnapshot documentSnapshot : querySnapshot) {
+            results.add(new Result(documentSnapshot));
+        }
+
+        return results;
     }
 
     public String getUser() {
@@ -56,6 +62,10 @@ public class Result extends AbstractEntity {
 
     public Double getResult() {
         return result;
+    }
+
+    public void setResult(Double result) {
+        this.result = result;
     }
 
     public void updateResult() {

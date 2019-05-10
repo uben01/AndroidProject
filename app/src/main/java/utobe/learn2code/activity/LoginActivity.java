@@ -12,9 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Collections;
 
-import utobe.learn2code.util.EntityManager;
-
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements IAbstractActivity {
     private final static int RC_SIGN_IN = 1;
 
     @Override
@@ -40,11 +38,12 @@ public class LoginActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                EntityManager.getInstance().setLoggedInUser(user);
+                entityManager.setLoggedInUser(user);
                 Intent intent = new Intent(LoginActivity.this, LanguageActivity.class);
                 startActivity(intent);
                 // ...
             } else {
+                //TODO: SnackBar
                 Log.e("ASD", response.getError().getErrorCode() + "");
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

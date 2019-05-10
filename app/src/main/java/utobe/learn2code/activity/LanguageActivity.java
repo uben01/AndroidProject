@@ -20,7 +20,7 @@ import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.util.Constants;
 
-public class LanguageActivity extends AppCompatActivity {
+public class LanguageActivity extends AppCompatActivity implements IAbstractActivity {
 
     private final Activity gThis = this;
     LanguageSelectAdapter adapter;
@@ -38,21 +38,21 @@ public class LanguageActivity extends AppCompatActivity {
             or
             NOT PUBLISHED but CREATED BY <ME>
          */
-        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
-                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, true)
+        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED, true)
                 .get()
                 .addOnSuccessListener(querySnapshots -> {
                     addLanguagesAndNotify(querySnapshots);
 
                 });
-       /* ERROR
-       FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME.dbName)
-                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED.dbName, false)
-                .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY.dbName, EntityManager.getInstance().getLoggedInUser())
+
+        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED, false)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY, entityManager.getLoggedInUser().getUid())
                 .get()
                 .addOnSuccessListener(querySnapshots2 -> {
                     addLanguagesAndNotify(querySnapshots2);
-                });*/
+                });
 
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -71,7 +71,7 @@ public class LanguageActivity extends AppCompatActivity {
         adapter.setClickListener((view1, position) -> {
             Language selected = adapter.getItem(position);
             Intent intent = new Intent(gThis, TableOfContentsActivity.class);
-            intent.putExtra(Constants.ABSTRACT_ENTITY_ID.dbName, selected.getId());
+            intent.putExtra(Constants.ABSTRACT_ENTITY_ID, selected.getId());
 
             startActivity(intent);
         });
@@ -85,10 +85,10 @@ public class LanguageActivity extends AppCompatActivity {
     private synchronized void addLanguagesAndNotify(QuerySnapshot querySnapshots) {
         try {
             int numOfLanguages = languages.size();
-            languages.addAll(Language.buildLanguages(querySnapshots));
+            languages.addAll(Language.buildLanguagesFromDB(querySnapshots));
             adapter.notifyItemRangeInserted(numOfLanguages, languages.size());
         } catch (PersistenceException e) {
-            // TODO:
+            //TODO: SnackBar
         }
     }
 }
