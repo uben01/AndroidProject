@@ -3,8 +3,10 @@ package utobe.learn2code.model;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
+import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
 
 public class Topic extends AbstractEntity {
@@ -17,15 +19,18 @@ public class Topic extends AbstractEntity {
 
     private ArrayList<Page> pages = new ArrayList<>();
 
-    private Topic(QueryDocumentSnapshot document) {
+    private Topic(QueryDocumentSnapshot document) throws PersistenceException {
         super(document.getId());
         title = document.getString(Constants.TOPIC_FIELD_TITLE);
         isTest = document.getBoolean(Constants.TOPIC_FIELD_IS_TEST);
         parent = document.getString(Constants.TOPIC_FIELD_PARENT);
         serialNumber = document.getLong(Constants.TOPIC_FIELD_SERIAL_NUMBER);
+
+        if (title == null || isTest == null || parent == null || serialNumber == null)
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
     }
 
-    public static ArrayList<Topic> buildTopicsFromDB(QuerySnapshot documents) {
+    public static ArrayList<Topic> buildTopicsFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<Topic> topics = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             topics.add(new Topic(document));

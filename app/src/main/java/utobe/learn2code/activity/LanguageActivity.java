@@ -4,15 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.LanguageSelectAdapter;
@@ -23,8 +26,9 @@ import utobe.learn2code.util.Constants;
 public class LanguageActivity extends AppCompatActivity implements IAbstractActivity {
 
     private final Activity gThis = this;
-    LanguageSelectAdapter adapter;
-    ArrayList<Language> languages;
+    private LanguageSelectAdapter adapter;
+    private ArrayList<Language> languages = new ArrayList<>();
+    private HashSet<String> languageIds = new HashSet<>();
     private FloatingActionButton fab;
 
     @Override
@@ -63,7 +67,6 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
         fab = findViewById(R.id.fab_add_language);
         final RecyclerView view = findViewById(R.id.rv_language);
 
-        languages = new ArrayList<>();
         adapter = new LanguageSelectAdapter(gThis, languages);
         view.setLayoutManager(new GridLayoutManager(gThis, elementsInRow));
 
@@ -79,7 +82,6 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
         fab.setOnClickListener(v -> {
             startActivity(new Intent(gThis, AddLanguageActivity.class));
         });
-
     }
 
     private synchronized void addLanguagesAndNotify(QuerySnapshot querySnapshots) {
@@ -87,9 +89,39 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
             int numOfLanguages = languages.size();
             languages.addAll(Language.buildLanguagesFromDB(querySnapshots));
             adapter.notifyItemRangeInserted(numOfLanguages, languages.size());
+            for (QueryDocumentSnapshot document : querySnapshots) {
+                languageIds.add(document.getId());
+            }
         } catch (PersistenceException e) {
             //TODO: SnackBar
+            Snackbar.make(gThis.findViewById(R.id.lo_language), "Could not load languages", Snackbar.LENGTH_LONG)
+                    .setAction("Retry", v -> recreate())
+                    .show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // TO SHOW NEWLY CREATED LANGUAGES
+        FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED, false)
+                .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY, entityManager.getLoggedInUser().getUid())
+                .get()
+                .addOnSuccessListener(querySnapshots -> {
+                    for (QueryDocumentSnapshot document : querySnapshots) {
+                        if (!languageIds.contains(document.getId())) {
+                            try {
+                                Language language = Language.buildLanguageFromDB(document);
+                                languages.add(language);
+                                adapter.notifyItemInserted(languages.size());
+                            } catch (PersistenceException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
     }
 }
 

@@ -23,22 +23,22 @@ public class Language extends AbstractEntity {
         createdBy = document.getString(Constants.LANGUAGE_FIELD_CREATED_BY);
         published = document.getBoolean(Constants.LANGUAGE_FIELD_PUBLISHED);
 
-        if (name == null || icon == null)
+        if (name == null || icon == null || createdBy == null || published == null)
             throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
     }
 
     public static ArrayList<Language> buildLanguagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<Language> languages = new ArrayList<>();
-        try {
-            for (QueryDocumentSnapshot document : documents) {
-                Language language = new Language(document);
-                languages.add(language);
-            }
-
-        } catch (PersistenceException e) {
-            throw new PersistenceException(MessageFormat.format("Error while persisting elements: {}", e.getLocalizedMessage()));
+        for (QueryDocumentSnapshot document : documents) {
+            Language language = new Language(document);
+            languages.add(language);
         }
+
         return languages;
+    }
+
+    public static Language buildLanguageFromDB(QueryDocumentSnapshot document) throws PersistenceException {
+        return new Language(document);
     }
 
     public String getName() {

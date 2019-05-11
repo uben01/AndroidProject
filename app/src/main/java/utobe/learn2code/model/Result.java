@@ -4,8 +4,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
 
 public class Result extends AbstractEntity {
@@ -13,29 +17,34 @@ public class Result extends AbstractEntity {
     private String topic;
     private Double result;
 
-    private Result(DocumentSnapshot document) {
+    private Result(DocumentSnapshot document) throws PersistenceException {
         super(document.getId());
 
         user = document.getString(Constants.RESULT_FIELD_USER);
         topic = document.getString(Constants.RESULT_FIELD_TOPIC);
         result = document.getDouble(Constants.RESULT_FIELD_RESULT);
+
+        if (user == null || topic == null || result == null)
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
+
+        ((Topic) entityManager.getEntity(topic)).setResult(this.getId());
     }
 
-    private Result(String user, String topic) {
+    private Result(String user, String topic) throws PersistenceException {
         this.user = user;
         this.topic = topic;
         this.result = 0.0;
-    }
 
-    public Result() {
+        if (user == null || topic == null)
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
     }
 
     // have to persist later
-    public static Result buildResult(String user, String topic) {
+    public static Result buildResult(String user, String topic) throws PersistenceException {
         return new Result(user, topic);
     }
 
-    public static ArrayList<Result> buildResultsFromDB(QuerySnapshot querySnapshot) {
+    public static ArrayList<Result> buildResultsFromDB(QuerySnapshot querySnapshot) throws PersistenceException {
         ArrayList<Result> results = new ArrayList<>();
         for (DocumentSnapshot documentSnapshot : querySnapshot) {
             results.add(new Result(documentSnapshot));
@@ -80,5 +89,15 @@ public class Result extends AbstractEntity {
 
         FirebaseFirestore.getInstance().collection("results").document(getId())
                 .update("result", this.result);
+    }
+
+    // Freamwork serialization doesn't work properly with this class
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Constants.RESULT_FIELD_USER, user);
+        map.put(Constants.RESULT_FIELD_RESULT, result);
+        map.put(Constants.RESULT_FIELD_TOPIC, topic);
+
+        return map;
     }
 }

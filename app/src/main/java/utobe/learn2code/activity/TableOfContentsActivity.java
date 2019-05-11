@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,23 +28,11 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
     private RecyclerView view;
     private TableOfContentAdapter mAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        loadDataAndSetView();
-
-    }
-
+    // Have to (re)load all time, this activity is active
     @Override
     protected void onResume() {
         super.onResume();
 
-        loadDataAndSetView();
-
-    }
-
-    private void loadDataAndSetView() {
         setContentView(R.layout.activity_table_of_contents);
 
         Intent intent = getIntent();
@@ -53,10 +42,13 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
         view = findViewById(R.id.rv_topics);
 
         FloatingActionButton fab = findViewById(R.id.fab_add_topic);
-        if (l.getCreatedBy().equals(entityManager.getLoggedInUser().getUid())) {
+        if (l.getCreatedBy().equals(entityManager.getLoggedInUser().getUid()) && !l.getPublished()) {
             fab.show();
             fab.setOnClickListener(v -> {
+                Intent addTopicIntent = new Intent(gThis, AddTopicActivity.class);
+                addTopicIntent.putExtra(Constants.ABSTRACT_ENTITY_ID, l.getId());
 
+                startActivity(addTopicIntent);
             });
         } else {
             fab.hide();
@@ -67,60 +59,76 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
                 .orderBy(Constants.TOPIC_FIELD_SERIAL_NUMBER)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<Topic> topics = Topic.buildTopicsFromDB(queryDocumentSnapshots);
-                    ArrayList<String> topicIds = new ArrayList<>();
+                    try {
+                        ArrayList<Topic> topics = Topic.buildTopicsFromDB(queryDocumentSnapshots);
+                        ArrayList<String> topicIds = new ArrayList<>();
 
-                    mAdapter = new TableOfContentAdapter(gThis, topicIds);
+                        mAdapter = new TableOfContentAdapter(gThis, topicIds);
 
-                    mAdapter.setClickListener((view, position) -> {
-                        Topic selected = mAdapter.getItem(position);
+                        mAdapter.setClickListener((view, position) -> {
+                            Topic selected = mAdapter.getItem(position);
 
-                        Intent selectTopicIntent = new Intent(gThis, TopicActivity.class)
-                                .putExtra(Constants.LANGUAGE_ENTITY_NAME, selected.getParent())
-                                .putExtra(Constants.TOPIC_ENTITY_NAME, selected.getId());
+                            Intent selectTopicIntent = new Intent(gThis, TopicActivity.class)
+                                    .putExtra(Constants.LANGUAGE_ENTITY_NAME, selected.getParent())
+                                    .putExtra(Constants.TOPIC_ENTITY_NAME, selected.getId());
 
-                        startActivity(selectTopicIntent);
-                    });
+                            startActivity(selectTopicIntent);
+                        });
 
-                    view.setAdapter(mAdapter);
-                    view.setLayoutManager(new LinearLayoutManager(gThis));
+                        view.setAdapter(mAdapter);
+                        view.setLayoutManager(new LinearLayoutManager(gThis));
 
-                    final String logedInUserId = entityManager.getLoggedInUser().getUid();
-                    FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME)
-                            .whereEqualTo(Constants.RESULT_FIELD_USER, logedInUserId)
-                            .get()
-                            .addOnSuccessListener(resultQuerySnapshot -> {
-                                ArrayList<Result> results = Result.buildResultsFromDB(resultQuerySnapshot);
+                        final String logedInUserId = entityManager.getLoggedInUser().getUid();
+                        FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME)
+                                .whereEqualTo(Constants.RESULT_FIELD_USER, logedInUserId)
+                                .get()
+                                .addOnSuccessListener(resultQuerySnapshot -> {
+                                    try {
+                                        ArrayList<Result> results = Result.buildResultsFromDB(resultQuerySnapshot);
 
-                                for (Result result : results) {
-                                    Topic parent = ((Topic) entityManager.getEntity(result.getTopic()));
-                                    parent.setResult(result.getId());
-                                }
-                                for (Topic tempTopic : topics) {
-                                    topicIds.add(tempTopic.getId());
-                                    Topic topic = (Topic) entityManager.getEntity(tempTopic.getId());
+                                        /*
+                                         * Set all possible results
+                                         * it's usually: all is set or none
+                                         * but there is a possibility for adding new topics to existing language
+                                         * */
+                                        for (Result result : results) {
+                                            Topic parent = ((Topic) entityManager.getEntity(result.getTopic()));
+                                            parent.setResult(result.getId());
+                                        }
+                                        for (Topic tempTopic : topics) {
+                                            topicIds.add(tempTopic.getId());
+                                            Topic topic = (Topic) entityManager.getEntity(tempTopic.getId());
 
-                                    if (topic.getResult() != null || !topic.getTest())
-                                        continue;
+                                            if (topic.getResult() != null || !topic.getTest())
+                                                continue;
 
-                                    Result resultForSelectedTopic = Result.buildResult(logedInUserId, topic.getId());
-                                    FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME)
-                                            .add(resultForSelectedTopic)
-                                            .addOnSuccessListener(documentReference -> {
-                                                // presist element
-                                                try {
-                                                    resultForSelectedTopic.setId(documentReference.getId());
-                                                    topic.setResult(resultForSelectedTopic.getId());
-                                                } catch (PersistenceException e) {
-                                                    //TODO: SnackBar
-                                                    e.printStackTrace();
-                                                }
-                                            });
-
-                                }
-                                mAdapter.notifyDataSetChanged();
-
-                            });
+                                            Result resultForSelectedTopic = Result.buildResult(logedInUserId, topic.getId());
+                                            FirebaseFirestore.getInstance()
+                                                    .collection(Constants.RESULT_ENTITY_SET_NAME)
+                                                    .add(resultForSelectedTopic.toMap())
+                                                    .addOnSuccessListener(documentReference -> {
+                                                        //presist element
+                                                        try {
+                                                            resultForSelectedTopic.setId(documentReference.getId());
+                                                            topic.setResult(resultForSelectedTopic.getId());
+                                                        } catch (PersistenceException e) {
+                                                            Snackbar.make(gThis.findViewById(R.id.lo_language), "Something went wrong during a result setting", Snackbar.LENGTH_LONG)
+                                                                    .show();
+                                                            e.printStackTrace();
+                                                        }
+                                                    });
+                                        }
+                                        mAdapter.notifyDataSetChanged();
+                                    } catch (PersistenceException e) {
+                                        Snackbar.make(gThis.findViewById(R.id.lo_language), "Something went wrong during a result setting", Snackbar.LENGTH_LONG)
+                                                .show();
+                                    }
+                                });
+                    } catch (PersistenceException e) {
+                        Snackbar.make(gThis.findViewById(R.id.lo_language), "Something went wrong during a topic setting", Snackbar.LENGTH_LONG)
+                                .setAction("Retry", v -> recreate())
+                                .show();
+                    }
                 });
     }
 }

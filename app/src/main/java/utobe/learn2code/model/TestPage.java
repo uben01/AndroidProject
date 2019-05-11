@@ -28,13 +28,9 @@ public class TestPage extends Page {
 
     public static ArrayList<TestPage> buildTestPagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<TestPage> testPages = new ArrayList<>();
-        try {
-            for (QueryDocumentSnapshot document : documents) {
-                TestPage page = new TestPage(document);
-                testPages.add(page);
-            }
-        } catch (PersistenceException e) {
-            throw new PersistenceException(MessageFormat.format("Error while persisting elements: {}", e.getLocalizedMessage()));
+        for (QueryDocumentSnapshot document : documents) {
+            TestPage page = new TestPage(document);
+            testPages.add(page);
         }
 
         return testPages;

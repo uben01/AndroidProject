@@ -5,4 +5,5 @@
     <string name="table_of_contents_locked">Locked</string>
     <string name="test_check_button">Check!</string>
     <string name="checxbox_incorrect">Incorrect answer</string>
+    <string name="unexpected_login_error">There was an unexpected error during the login process. Please check your network and try again later!</string>
 </resources>

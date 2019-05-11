@@ -1,8 +1,10 @@
 package utobe.learn2code.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,10 +27,11 @@ import utobe.learn2code.util.Constants;
 public class AddLanguageActivity extends AppCompatActivity implements IAbstractActivity {
     private static final int PICK_FILE_REQUEST = 1;
 
-    Button button_next;
-    Boolean term_text = false;
-    Boolean term_icon = false;
+    private Button button_next;
+    private Boolean term_text = false;
+    private Boolean term_icon = false;
     private Uri uploadIconUri;
+    private Activity gThis = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +98,15 @@ public class AddLanguageActivity extends AppCompatActivity implements IAbstractA
 
                         FirebaseFirestore.getInstance()
                                 .collection(Constants.LANGUAGE_ENTITY_SET_NAME)
-                                .document()
-                                .set(language);
+                                .add(language)
+                                .addOnSuccessListener(documentReference -> {
+                                    Intent addTopicIntent = new Intent(gThis, AddTopicActivity.class);
+                                    addTopicIntent.putExtra(Constants.ABSTRACT_ENTITY_ID, documentReference.getId());
 
+                                    startActivity(addTopicIntent);
+                                });
                     });
         });
-
     }
 
     @Override
@@ -113,6 +119,9 @@ public class AddLanguageActivity extends AppCompatActivity implements IAbstractA
                 if (term_text) {
                     button_next.setEnabled(true);
                 }
+            } else {
+                Snackbar.make(findViewById(R.id.lo_language), "Something went wrong during the file upload", Snackbar.LENGTH_LONG)
+                        .show();
             }
         }
     }
