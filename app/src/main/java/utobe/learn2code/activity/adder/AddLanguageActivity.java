@@ -1,4 +1,4 @@
-package utobe.learn2code.activity;
+package utobe.learn2code.activity.adder;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import utobe.learn2code.R;
+import utobe.learn2code.activity.IAbstractActivity;
 import utobe.learn2code.util.Constants;
 
 public class AddLanguageActivity extends AppCompatActivity implements IAbstractActivity {

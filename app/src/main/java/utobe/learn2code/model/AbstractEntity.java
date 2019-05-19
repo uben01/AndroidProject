@@ -9,12 +9,16 @@ import utobe.learn2code.util.EntityManager;
 
 public abstract class AbstractEntity {
     private String id;
-    final EntityManager entityManager = EntityManager.getInstance();
+    final protected EntityManager entityManager = EntityManager.getInstance();
 
-    AbstractEntity(@NotNull String id) {
+    AbstractEntity(@NotNull String id) throws PersistenceException {
         this.id = id;
 
-        EntityManager.getInstance().addEntity(this);
+        if (entityManager.getEntity(id) != null) {
+            throw new PersistenceException(MessageFormat.format("Document already persisted with id {0}", id));
+        }
+
+        entityManager.addEntity(this);
     }
 
     AbstractEntity() {
@@ -26,7 +30,7 @@ public abstract class AbstractEntity {
 
     public void setId(String id) throws PersistenceException {
         if (this.id != null)
-            throw new PersistenceException(MessageFormat.format("An element already persisted with id {}", id));
+            throw new PersistenceException(MessageFormat.format("An element already persisted with id {0}", id));
 
         this.id = id;
 

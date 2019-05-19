@@ -6,4 +6,7 @@
     <string name="test_check_button">Check!</string>
     <string name="checxbox_incorrect">Incorrect answer</string>
     <string name="unexpected_login_error">There was an unexpected error during the login process. Please check your network and try again later!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lo_add_topic"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".activity.AddTopicActivity">
+    tools:context=".activity.adder.AddTopicActivity">
 
     <TextView
         android:id="@+id/txt_add_topic_title"
@@ -23,7 +24,7 @@
         android:layout_margin="8dp"
         android:ems="10"
         android:hint="Topic name"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:textSize="20sp" />
 
     <Switch
@@ -46,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            tools:text="Back" />
+            android:text="Back" />
 
         <Button
             android:id="@+id/button_add_topic_add_pages"
@@ -54,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="5"
+            android:enabled="false"
             android:text="Set pages" />
     </LinearLayout>
 

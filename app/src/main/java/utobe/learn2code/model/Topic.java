@@ -5,9 +5,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class Topic extends AbstractEntity {
     private String title;
@@ -27,16 +30,35 @@ public class Topic extends AbstractEntity {
         serialNumber = document.getLong(Constants.TOPIC_FIELD_SERIAL_NUMBER);
 
         if (title == null || isTest == null || parent == null || serialNumber == null)
-            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));
+
+    }
+
+    public Topic(String title, Boolean isTest, String parent) throws PersistenceException {
+        this.title = title;
+        this.isTest = isTest;
+        this.parent = parent;
+        this.serialNumber = new Long(((Language) entityManager.getEntity(parent)).getTopicCount());
+
+        if (title == null || isTest == null || parent == null)
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));
     }
 
     public static ArrayList<Topic> buildTopicsFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<Topic> topics = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            topics.add(new Topic(document));
+            Topic top = (Topic) EntityManager.getInstance().getEntity(document.getId());
+            if (top == null)
+                topics.add(new Topic(document));
+            else
+                topics.add(top);
         }
 
         return topics;
+    }
+
+    public static Topic buildTopic(String title, Boolean isTest, String parent) throws PersistenceException {
+        return new Topic(title, isTest, parent);
     }
 
     public String getResult() {
@@ -95,5 +117,15 @@ public class Topic extends AbstractEntity {
         if(pages == null)
             return 0;
         return pages.size();
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Constants.TOPIC_FIELD_IS_TEST, isTest);
+        map.put(Constants.TOPIC_FIELD_PARENT, parent);
+        map.put(Constants.TOPIC_FIELD_SERIAL_NUMBER, serialNumber);
+        map.put(Constants.TOPIC_FIELD_TITLE, title);
+
+        return map;
     }
 }

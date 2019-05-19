@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class TestPage extends Page {
     private final String A, B, C, D;
@@ -23,14 +24,18 @@ public class TestPage extends Page {
         correct = document.getString(Constants.PAGE_FIELD_CORRECT).toCharArray();
 
         if (A == null || B == null || C == null || D == null || correct == null)
-            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));
     }
 
     public static ArrayList<TestPage> buildTestPagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<TestPage> testPages = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            TestPage page = new TestPage(document);
-            testPages.add(page);
+            TestPage tpage = (TestPage) EntityManager.getInstance().getEntity(document.getId());
+            if (tpage == null)
+                testPages.add(new TestPage(document));
+            else
+                testPages.add(tpage);
+
         }
 
         return testPages;

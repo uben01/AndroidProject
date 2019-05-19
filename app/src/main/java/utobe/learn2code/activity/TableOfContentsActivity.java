@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 import utobe.learn2code.R;
+import utobe.learn2code.activity.adder.AddTopicActivity;
 import utobe.learn2code.adapter.TableOfContentAdapter;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
@@ -38,15 +39,15 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        final Language l = (Language) entityManager.getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID));
+        final Language parentLanguage = (Language) entityManager.getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID));
         view = findViewById(R.id.rv_topics);
 
         FloatingActionButton fab = findViewById(R.id.fab_add_topic);
-        if (l.getCreatedBy().equals(entityManager.getLoggedInUser().getUid()) && !l.getPublished()) {
+        if (parentLanguage.getCreatedBy().equals(entityManager.getLoggedInUser().getUid()) && !parentLanguage.getPublished()) {
             fab.show();
             fab.setOnClickListener(v -> {
                 Intent addTopicIntent = new Intent(gThis, AddTopicActivity.class);
-                addTopicIntent.putExtra(Constants.ABSTRACT_ENTITY_ID, l.getId());
+                addTopicIntent.putExtra(Constants.ABSTRACT_ENTITY_ID, parentLanguage.getId());
 
                 startActivity(addTopicIntent);
             });
@@ -55,13 +56,15 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
         }
 
         FirebaseFirestore.getInstance().collection(Constants.TOPIC_ENTITY_SET_NAME)
-                .whereEqualTo(Constants.TOPIC_FIELD_PARENT, l.getId())
+                .whereEqualTo(Constants.TOPIC_FIELD_PARENT, parentLanguage.getId())
                 .orderBy(Constants.TOPIC_FIELD_SERIAL_NUMBER)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     try {
                         ArrayList<Topic> topics = Topic.buildTopicsFromDB(queryDocumentSnapshots);
                         ArrayList<String> topicIds = new ArrayList<>();
+
+                        parentLanguage.addTopics(topics);
 
                         mAdapter = new TableOfContentAdapter(gThis, topicIds);
 

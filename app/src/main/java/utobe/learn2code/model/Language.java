@@ -5,15 +5,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class Language extends AbstractEntity {
     private final String name;
     private final String icon;
     private final String createdBy;
     private final Boolean published;
+
+    private final ArrayList<Topic> topics = new ArrayList<>();
 
     private Language(QueryDocumentSnapshot document) throws PersistenceException {
         super(document.getId());
@@ -24,21 +28,29 @@ public class Language extends AbstractEntity {
         published = document.getBoolean(Constants.LANGUAGE_FIELD_PUBLISHED);
 
         if (name == null || icon == null || createdBy == null || published == null)
-            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));
     }
 
     public static ArrayList<Language> buildLanguagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<Language> languages = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            Language language = new Language(document);
-            languages.add(language);
+            Language lan = (Language) EntityManager.getInstance().getEntity(document.getId());
+            if (lan == null)
+                languages.add(new Language(document));
+            else
+                languages.add(lan);
+
         }
 
         return languages;
     }
 
     public static Language buildLanguageFromDB(QueryDocumentSnapshot document) throws PersistenceException {
-        return new Language(document);
+        Language lan = (Language) EntityManager.getInstance().getEntity(document.getId());
+        if (lan == null)
+            return new Language(document);
+
+        return lan;
     }
 
     public String getName() {
@@ -55,5 +67,21 @@ public class Language extends AbstractEntity {
 
     public String getCreatedBy() {
         return createdBy;
+    }
+
+    public void addTopic(Topic topic) {
+        topics.add(topic);
+    }
+
+    public Topic getTopic(int i) {
+        return topics.get(i);
+    }
+
+    public void addTopics(Collection<Topic> topics) {
+        this.topics.addAll(topics);
+    }
+
+    public int getTopicCount() {
+        return topics.size();
     }
 }

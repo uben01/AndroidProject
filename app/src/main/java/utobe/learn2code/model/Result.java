@@ -11,6 +11,7 @@ import java.util.Map;
 
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
+import utobe.learn2code.util.EntityManager;
 
 public class Result extends AbstractEntity {
     private String user;
@@ -25,7 +26,7 @@ public class Result extends AbstractEntity {
         result = document.getDouble(Constants.RESULT_FIELD_RESULT);
 
         if (user == null || topic == null || result == null)
-            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));
 
         ((Topic) entityManager.getEntity(topic)).setResult(this.getId());
     }
@@ -36,7 +37,7 @@ public class Result extends AbstractEntity {
         this.result = 0.0;
 
         if (user == null || topic == null)
-            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {}", getId()));
+            throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));
     }
 
     // have to persist later
@@ -47,7 +48,11 @@ public class Result extends AbstractEntity {
     public static ArrayList<Result> buildResultsFromDB(QuerySnapshot querySnapshot) throws PersistenceException {
         ArrayList<Result> results = new ArrayList<>();
         for (DocumentSnapshot documentSnapshot : querySnapshot) {
-            results.add(new Result(documentSnapshot));
+            Result res = (Result) EntityManager.getInstance().getEntity(documentSnapshot.getId());
+            if (res == null)
+                results.add(new Result(documentSnapshot));
+            else
+                results.add(res);
         }
 
         return results;
