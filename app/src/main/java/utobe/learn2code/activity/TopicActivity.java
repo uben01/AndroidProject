@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import utobe.learn2code.R;
 import utobe.learn2code.adapter.TopicAdapter;
 import utobe.learn2code.exception.PersistenceException;
-import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.TestPage;
 import utobe.learn2code.model.Topic;
@@ -35,7 +34,6 @@ public class TopicActivity extends AppCompatActivity implements IAbstractActivit
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        Language language = (Language) entityManager.getEntity(extras.getString(Constants.LANGUAGE_ENTITY_NAME));
         topic = (Topic) entityManager.getEntity(extras.getString(Constants.TOPIC_ENTITY_NAME));
 
         FirebaseFirestore.getInstance().collection(Constants.PAGE_ENTITY_SET_NAME)
@@ -58,21 +56,6 @@ public class TopicActivity extends AppCompatActivity implements IAbstractActivit
                         mTopicAdapter = new TopicAdapter(getSupportFragmentManager(), pages, topic.getTest(), mViewPager);
                         mViewPager.setAdapter(mTopicAdapter);
 
-                        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                            @Override
-                            public void onPageScrolled(int i, float v, int i1) {
-
-                            }
-
-                            @Override
-                            public void onPageSelected(int i) {
-                            }
-
-                            @Override
-                            public void onPageScrollStateChanged(int i) {
-
-                            }
-                        });
                         final TabLayout tabLayout = findViewById(R.id.vp_tab_topic);
                         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
                     } catch (PersistenceException e) {

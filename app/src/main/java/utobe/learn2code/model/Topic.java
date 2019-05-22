@@ -34,11 +34,11 @@ public class Topic extends AbstractEntity {
 
     }
 
-    public Topic(String title, Boolean isTest, String parent) throws PersistenceException {
+    private Topic(String title, Boolean isTest, String parent) throws PersistenceException {
         this.title = title;
         this.isTest = isTest;
         this.parent = parent;
-        this.serialNumber = new Long(((Language) entityManager.getEntity(parent)).getTopicCount());
+        this.serialNumber = (long) ((Language) entityManager.getEntity(parent)).getTopicCount();
 
         if (title == null || isTest == null || parent == null)
             throw new PersistenceException(MessageFormat.format("Missing mandatory field in object with id {0}", getId()));

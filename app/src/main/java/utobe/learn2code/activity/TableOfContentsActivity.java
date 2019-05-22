@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Switch;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,6 +30,7 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
 
     private RecyclerView view;
     private TableOfContentAdapter mAdapter;
+    private final String logedInUserId = entityManager.getLoggedInUser().getUid();
 
     // Have to (re)load all time, this activity is active
     @Override
@@ -53,6 +56,16 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
             });
         } else {
             fab.hide();
+        }
+        Switch publishedSwitch = findViewById(R.id.sw_published);
+        if (parentLanguage.getCreatedBy().equals(entityManager.getLoggedInUser().getUid())) {
+            publishedSwitch.setVisibility(View.VISIBLE);
+            publishedSwitch.setChecked(parentLanguage.getPublished());
+
+            publishedSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                    FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME)
+                            .document(parentLanguage.getId())
+                            .update(Constants.LANGUAGE_FIELD_PUBLISHED, isChecked));
         }
 
         FirebaseFirestore.getInstance().collection(Constants.TOPIC_ENTITY_SET_NAME)
@@ -81,13 +94,15 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
                         view.setAdapter(mAdapter);
                         view.setLayoutManager(new LinearLayoutManager(gThis));
 
-                        final String logedInUserId = entityManager.getLoggedInUser().getUid();
                         FirebaseFirestore.getInstance().collection(Constants.RESULT_ENTITY_SET_NAME)
                                 .whereEqualTo(Constants.RESULT_FIELD_USER, logedInUserId)
                                 .get()
                                 .addOnSuccessListener(resultQuerySnapshot -> {
                                     try {
-                                        ArrayList<Result> results = Result.buildResultsFromDB(resultQuerySnapshot);
+                                        for (Topic tempTopic : topics)
+                                            topicIds.add(tempTopic.getId());
+
+                                        ArrayList<Result> results = Result.buildResultsFromDBforTopics(resultQuerySnapshot, topicIds);
 
                                         /*
                                          * Set all possible results
@@ -99,7 +114,6 @@ public class TableOfContentsActivity extends AppCompatActivity implements IAbstr
                                             parent.setResult(result.getId());
                                         }
                                         for (Topic tempTopic : topics) {
-                                            topicIds.add(tempTopic.getId());
                                             Topic topic = (Topic) entityManager.getEntity(tempTopic.getId());
 
                                             if (topic.getResult() != null || !topic.getTest())

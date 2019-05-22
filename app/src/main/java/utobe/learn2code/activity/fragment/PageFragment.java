@@ -1,5 +1,6 @@
 package utobe.learn2code.activity.fragment;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import utobe.learn2code.R;
 import utobe.learn2code.activity.IAbstractActivity;
 import utobe.learn2code.activity.TopicActivity;
+import utobe.learn2code.activity.adder.AddPageActivity;
 import utobe.learn2code.model.Page;
 import utobe.learn2code.model.Result;
 import utobe.learn2code.model.TestPage;
@@ -65,8 +67,8 @@ public class PageFragment extends Fragment implements IAbstractActivity {
         String text = ((Page) entityManager.getEntity(pageId)).getText();
         textView.setText(HtmlCompat.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
 
-        FloatingActionButton fab = rootView.findViewById(R.id.fab_next_topic);
-        fab.setOnClickListener(v -> {
+        FloatingActionButton fabNext = rootView.findViewById(R.id.fab_next_page);
+        fabNext.setOnClickListener(v -> {
             TopicActivity activity = (TopicActivity) getActivity();
             ViewPager viewPager = ((TopicActivity) getActivity()).getViewPager();
             if (activity.getItemCount() != viewPager.getCurrentItem() + 1) {
@@ -74,6 +76,13 @@ public class PageFragment extends Fragment implements IAbstractActivity {
             } else {
                 activity.finish();
             }
+        });
+        FloatingActionButton fabAdd = rootView.findViewById(R.id.fab_add_page);
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddPageActivity.class);
+            intent.putExtra(Constants.ABSTRACT_ENTITY_ID, ((Page) entityManager.getEntity(pageId)).getParent());
+
+            startActivity(intent);
         });
 
         if (isTest) {
@@ -97,8 +106,8 @@ public class PageFragment extends Fragment implements IAbstractActivity {
             runTest.setOnClickListener(v -> {
                 int errCounter = 0;
                 for (int i = 0; i < buttons.length; i++) {
-                    if (new String(page.getCorrectAnswers()).contains(chars[i]) != buttons[i].isChecked()) {
-                        if (new String(page.getCorrectAnswers()).contains(chars[i])) {
+                    if (page.getCorrectAnswers().contains(chars[i]) != buttons[i].isChecked()) {
+                        if (page.getCorrectAnswers().contains(chars[i])) {
                             buttons[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
                             // Ha jó lett volna
                         } else {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -18,6 +17,7 @@ import utobe.learn2code.activity.IAbstractActivity;
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.model.Language;
 import utobe.learn2code.model.Topic;
+import utobe.learn2code.util.AfterTextChangedWatcher;
 import utobe.learn2code.util.Constants;
 
 public class AddTopicActivity extends AppCompatActivity implements IAbstractActivity {
@@ -26,7 +26,7 @@ public class AddTopicActivity extends AppCompatActivity implements IAbstractActi
     private EditText name;
     private Switch isTest;
 
-    private Activity gThis = this;
+    private final Activity gThis = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +41,7 @@ public class AddTopicActivity extends AppCompatActivity implements IAbstractActi
         Button button_next = findViewById(R.id.button_add_topic_add_pages);
         Button button_back = findViewById(R.id.button_add_topic_back);
 
-        name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+        name.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
@@ -62,9 +52,7 @@ public class AddTopicActivity extends AppCompatActivity implements IAbstractActi
             }
         });
 
-        button_back.setOnClickListener(v -> {
-            finish();
-        });
+        button_back.setOnClickListener(v -> finish());
 
         button_next.setOnClickListener(v -> {
             try {

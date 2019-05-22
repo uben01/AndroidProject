@@ -2,11 +2,28 @@
     <string name="app_name">Learn 2 Code</string>
 
     <string name="table_of_contents_start">Start</string>
-    <string name="table_of_contents_locked">Locked</string>
     <string name="test_check_button">Check!</string>
     <string name="checxbox_incorrect">Incorrect answer</string>
     <string name="unexpected_login_error">There was an unexpected error during the login process. Please check your network and try again later!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="question">Question</string>
+    <string name="answer_1">Answer 1</string>
+    <string name="answer_2">Answer 2</string>
+    <string name="answer_3">Answer 3</string>
+    <string name="answer_4">Answer 4</string>
+    <string name="topic_name">Topic name</string>
+    <string name="is_test">Is test?</string>
+    <string name="new_topic">New topic</string>
+    <string name="set_pages">Set pages</string>
+    <string name="language_name">Language Name</string>
+    <string name="upload">upload</string>
+    <string name="upload_svg_file_as_icon">Upload SVG file as icon</string>
+    <string name="back">Back</string>
+    <string name="add_topics">Add topics</string>
+    <string name="new_language">New language</string>
+    <string name="description">Description</string>
+    <string name="not_published">NOT PUBLISHED</string>
+    <string name="published">Published</string>
 </resources>

@@ -9,7 +9,7 @@ import utobe.learn2code.util.EntityManager;
 
 public abstract class AbstractEntity {
     private String id;
-    final protected EntityManager entityManager = EntityManager.getInstance();
+    final EntityManager entityManager = EntityManager.getInstance();
 
     AbstractEntity(@NotNull String id) throws PersistenceException {
         this.id = id;

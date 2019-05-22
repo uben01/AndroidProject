@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:paddingStart="32dp"
-        android:text="New topic"
+        android:paddingEnd="32dp"
+        android:text="@string/new_topic"
         android:textAlignment="textStart"
         android:textSize="36sp" />
 
@@ -23,17 +24,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:ems="10"
-        android:hint="Topic name"
+        android:autofillHints=""
         android:inputType="text"
+        android:hint="@string/topic_name"
         android:textSize="20sp" />
 
     <Switch
         android:id="@+id/sw_is_test"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="8dp"
         android:layout_weight="1"
-        android:text="Is test?"
+        android:text="@string/is_test"
         android:textSize="20sp" />
 
     <LinearLayout
@@ -43,20 +45,25 @@
 
         <Button
             android:id="@+id/button_add_topic_back"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            android:text="Back" />
+            android:backgroundTint="@color/fui_bgGoogle"
+            android:text="@string/back" />
 
         <Button
             android:id="@+id/button_add_topic_add_pages"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="5"
             android:enabled="false"
-            android:text="Set pages" />
+            android:foregroundGravity="bottom|center"
+            android:text="@string/set_pages"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
 </LinearLayout>

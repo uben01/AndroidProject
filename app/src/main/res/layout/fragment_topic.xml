@@ -63,15 +63,34 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_next_topic"
+        android:id="@+id/fab_next_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:clickable="true"
         app:backgroundTint="#009688"
         app:fabSize="normal"
-        app:layout_anchorGravity="bottom|right|end"
+        android:focusable="true"
+        app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_round_arrow_forward" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="90dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#009688"
+        app:fabSize="normal"
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/ic_baseline_add" />
 
 </android.support.design.widget.CoordinatorLayout>

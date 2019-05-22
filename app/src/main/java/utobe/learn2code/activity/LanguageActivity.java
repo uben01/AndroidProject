@@ -28,9 +28,8 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
 
     private final Activity gThis = this;
     private LanguageSelectAdapter adapter;
-    private ArrayList<Language> languages = new ArrayList<>();
-    private HashSet<String> languageIds = new HashSet<>();
-    private FloatingActionButton fab;
+    private final ArrayList<Language> languages = new ArrayList<>();
+    private final HashSet<String> languageIds = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +45,13 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
         FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME)
                 .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED, true)
                 .get()
-                .addOnSuccessListener(querySnapshots -> {
-                    addLanguagesAndNotify(querySnapshots);
-
-                });
+                .addOnSuccessListener(querySnapshots -> addLanguagesAndNotify(querySnapshots));
 
         FirebaseFirestore.getInstance().collection(Constants.LANGUAGE_ENTITY_SET_NAME)
                 .whereEqualTo(Constants.LANGUAGE_FIELD_PUBLISHED, false)
                 .whereEqualTo(Constants.LANGUAGE_FIELD_CREATED_BY, entityManager.getLoggedInUser().getUid())
                 .get()
-                .addOnSuccessListener(querySnapshots2 -> {
-                    addLanguagesAndNotify(querySnapshots2);
-                });
+                .addOnSuccessListener(querySnapshots2 -> addLanguagesAndNotify(querySnapshots2));
 
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -65,7 +59,7 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
         final float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
         final int elementsInRow = (int) Math.floor(screenWidth / 110.0);
 
-        fab = findViewById(R.id.fab_add_language);
+        FloatingActionButton fab = findViewById(R.id.fab_add_language);
         final RecyclerView view = findViewById(R.id.rv_language);
 
         adapter = new LanguageSelectAdapter(gThis, languages);
@@ -80,9 +74,7 @@ public class LanguageActivity extends AppCompatActivity implements IAbstractActi
             startActivity(intent);
         });
 
-        fab.setOnClickListener(v -> {
-            startActivity(new Intent(gThis, AddLanguageActivity.class));
-        });
+        fab.setOnClickListener(v -> startActivity(new Intent(gThis, AddLanguageActivity.class)));
     }
 
     private synchronized void addLanguagesAndNotify(QuerySnapshot querySnapshots) {

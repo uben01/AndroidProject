@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:paddingStart="32dp"
-        android:text="New language"
+        android:paddingEnd="32dp"
+        android:text="@string/new_language"
         android:textAlignment="textStart"
         android:textSize="36sp" />
 
@@ -24,9 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:clickable="true"
-        android:focusable="auto"
+        android:autofillHints=""
         android:gravity="clip_horizontal|clip_vertical"
-        android:hint="Language Name"
+        android:focusable="true"
+        android:hint="@string/language_name"
         android:inputType="text" />
 
     <LinearLayout
@@ -40,15 +42,15 @@
             android:id="@+id/button_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="upload"
+            android:contentDescription="@string/upload"
             app:srcCompat="@android:drawable/ic_menu_upload" />
 
         <TextView
             android:id="@+id/txt_upload_svg"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Upload SVG file as icon" />
+            android:text="@string/upload_svg_file_as_icon" />
 
     </LinearLayout>
 
@@ -59,23 +61,27 @@
 
         <Button
             android:id="@+id/button_add_language_back"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:backgroundTint="@color/fui_bgGoogle"
             android:enabled="true"
             android:foregroundGravity="bottom|center"
-            android:text="Back" />
+            android:text="@string/back" />
 
         <Button
             android:id="@+id/button_add_language_next"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="5"
             android:enabled="false"
             android:foregroundGravity="bottom|center"
-            android:text="Add topics" />
+            android:text="@string/add_topics"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
 </LinearLayout>

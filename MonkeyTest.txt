@@ -1,0 +1,158 @@
+j6lte:/ $ monkey -p utobe.learn2code --throttle 5 -v 500
+  bash arg: -p
+  bash arg: utobe.learn2code
+  bash arg: --throttle
+  bash arg: 5
+  bash arg: -v
+  bash arg: 500
+args: [-p, utobe.learn2code, --throttle, 5, -v, 500]
+ arg: "-p"
+ arg: "utobe.learn2code"
+ arg: "--throttle"
+ arg: "5"
+ arg: "-v"
+ arg: "500"
+data="utobe.learn2code"
+arg="--throttle" mCurArgData="null" mNextArg=3 argwas="--throttle" nextarg="5"
+data="5"
+:Monkey: seed=1558806157827 count=500
+:AllowPackage: utobe.learn2code
+:IncludeCategory: android.intent.category.LAUNCHER
+:IncludeCategory: android.intent.category.MONKEY
+// Event percentages:
+//   0: 15.0%
+//   1: 10.0%
+//   2: 2.0%
+//   3: 15.0%
+//   4: -0.0%
+//   5: -0.0%
+//   6: 25.0%
+//   7: 15.0%
+//   8: 2.0%
+//   9: 2.0%
+//   10: 1.0%
+//   11: 13.0%
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=utobe.learn2code/.activity.LoginActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=utobe.learn2code/.activity.LoginActivity } in package utobe.learn2code
+:Sending Touch (ACTION_DOWN): 0:(512.0,857.0)
+:Sending Touch (ACTION_UP): 0:(562.03827,828.9397)
+:Sending Touch (ACTION_DOWN): 0:(507.0,378.0)
+:Sending Touch (ACTION_UP): 0:(548.06775,330.0784)
+    // Allowing start of Intent { cmp=utobe.learn2code/.activity.TableOfContentsActivity } in package utobe.learn2code
+:Sending Touch (ACTION_DOWN): 0:(436.0,1285.0)
+:Sending Touch (ACTION_UP): 0:(428.1586,1264.3639)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(709.0,774.0)
+:Sending Touch (ACTION_UP): 0:(720.0,775.9315)
+    // activityResuming(utobe.learn2code)
+:Sending Touch (ACTION_DOWN): 0:(491.0,1417.0)
+:Sending Touch (ACTION_UP): 0:(440.16443,1450.0)
+:Sending Touch (ACTION_DOWN): 0:(475.0,149.0)
+:Sending Touch (ACTION_UP): 0:(466.71912,149.21088)
+:Sending Touch (ACTION_DOWN): 0:(450.0,160.0)
+:Sending Touch (ACTION_UP): 0:(444.014,148.88916)
+:Sending Touch (ACTION_DOWN): 0:(652.0,781.0)
+    //[calendar_time:2019-05-22 23:39:16.787  system_uptime:1511373252]
+    // Sending event #100
+:Sending Touch (ACTION_UP): 0:(581.7503,785.19885)
+:Sending Touch (ACTION_DOWN): 0:(128.0,139.0)
+:Sending Touch (ACTION_UP): 0:(76.35484,155.1133)
+:Sending Touch (ACTION_DOWN): 0:(115.0,730.0)
+:Sending Touch (ACTION_UP): 0:(111.8639,733.06384)
+:Sending Touch (ACTION_DOWN): 0:(479.0,908.0)
+:Sending Touch (ACTION_UP): 0:(488.91098,914.6326)
+:Sending Touch (ACTION_DOWN): 0:(671.0,1016.0)
+:Sending Touch (ACTION_UP): 0:(664.53735,1015.101)
+:Sending Touch (ACTION_DOWN): 0:(285.0,1316.0)
+:Sending Touch (ACTION_UP): 0:(291.66617,1316.3256)
+:Sending Touch (ACTION_DOWN): 0:(270.0,895.0)
+:Sending Touch (ACTION_UP): 0:(237.87701,947.0431)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(51.0,844.0)
+:Sending Touch (ACTION_UP): 0:(44.844685,852.1509)
+:Sending Touch (ACTION_DOWN): 0:(360.0,773.0)
+:Sending Touch (ACTION_UP): 0:(356.0015,770.50037)
+:Sending Touch (ACTION_DOWN): 0:(670.0,798.0)
+:Sending Touch (ACTION_UP): 0:(681.5057,807.86554)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(369.0,1284.0)
+:Sending Touch (ACTION_UP): 0:(360.3948,1279.0696)
+    // Allowing start of Intent { cmp=utobe.learn2code/.activity.adder.AddLanguageActivity } in package utobe.learn2code
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.BrightnessDialog } in package com.android.systemui
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-5.0)
+    //[calendar_time:2019-05-22 23:39:18.169  system_uptime:1511374634]
+    // Sending event #200
+:Sending Touch (ACTION_DOWN): 0:(325.0,1075.0)
+:Sending Touch (ACTION_UP): 0:(332.6729,1079.4294)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(666.0,1263.0)
+:Sending Touch (ACTION_UP): 0:(661.07684,1263.322)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(347.0,1340.0)
+:Sending Touch (ACTION_UP): 0:(345.92844,1335.5408)
+:Sending Touch (ACTION_DOWN): 0:(646.0,1072.0)
+:Sending Touch (ACTION_UP): 0:(602.8946,1040.2509)
+:Sending Touch (ACTION_DOWN): 0:(391.0,530.0)
+:Sending Touch (ACTION_UP): 0:(387.21835,527.1416)
+:Sending Touch (ACTION_DOWN): 0:(510.0,665.0)
+:Sending Touch (ACTION_UP): 0:(504.30536,683.25793)
+    //[calendar_time:2019-05-22 23:39:18.789  system_uptime:1511375255]
+    // Sending event #300
+:Sending Touch (ACTION_DOWN): 0:(627.0,9.0)
+:Sending Touch (ACTION_UP): 0:(638.86865,8.930864)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(261.0,1008.0)
+:Sending Touch (ACTION_UP): 0:(274.96606,1020.39087)
+:Sending Touch (ACTION_DOWN): 0:(137.0,246.0)
+:Sending Touch (ACTION_UP): 0:(140.68814,256.1408)
+:Sending Touch (ACTION_DOWN): 0:(621.0,1039.0)
+:Sending Touch (ACTION_UP): 0:(607.4443,1039.0471)
+:Sending Touch (ACTION_DOWN): 0:(418.0,865.0)
+:Sending Touch (ACTION_UP): 0:(412.11536,864.9647)
+:Sending Touch (ACTION_DOWN): 0:(15.0,1150.0)
+:Sending Touch (ACTION_UP): 0:(22.48133,1170.6271)
+:Sending Touch (ACTION_DOWN): 0:(12.0,361.0)
+:Sending Touch (ACTION_UP): 0:(9.39156,364.00015)
+:Sending Touch (ACTION_DOWN): 0:(292.0,169.0)
+:Sending Touch (ACTION_UP): 0:(287.39737,174.64838)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(49.0,379.0)
+    //[calendar_time:2019-05-22 23:39:19.608  system_uptime:1511376073]
+    // Sending event #400
+:Sending Touch (ACTION_UP): 0:(0.0,295.27942)
+:Sending Touch (ACTION_DOWN): 0:(717.0,886.0)
+:Sending Touch (ACTION_UP): 0:(707.398,903.7022)
+    // Rejecting start of Intent { cmp=com.touchtype.swiftkey/com.touchtype.materialsettings.HomeContainerActivity } in package com.touchtype.swiftkey
+:Sending Touch (ACTION_DOWN): 0:(390.0,390.0)
+:Sending Touch (ACTION_UP): 0:(394.0028,393.46014)
+:Sending Touch (ACTION_DOWN): 0:(530.0,418.0)
+:Sending Touch (ACTION_UP): 0:(524.971,427.24628)
+:Sending Touch (ACTION_DOWN): 0:(340.0,1377.0)
+:Sending Touch (ACTION_UP): 0:(336.35287,1376.5537)
+:Sending Touch (ACTION_DOWN): 0:(503.0,493.0)
+:Sending Touch (ACTION_UP): 0:(522.74066,506.39615)
+:Sending Touch (ACTION_DOWN): 0:(89.0,181.0)
+:Sending Touch (ACTION_UP): 0:(90.48847,173.45393)
+:Sending Touch (ACTION_DOWN): 0:(660.0,357.0)
+:Sending Touch (ACTION_UP): 0:(720.0,362.19122)
+:Sending Touch (ACTION_DOWN): 0:(538.0,851.0)
+:Sending Touch (ACTION_UP): 0:(536.6058,849.32214)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(334.0,1235.0)
+:Sending Touch (ACTION_UP): 0:(429.14337,1225.5945)
+:Sending Touch (ACTION_DOWN): 0:(662.0,656.0)
+:Sending Touch (ACTION_UP): 0:(648.2283,638.338)
+:Sending Touch (ACTION_DOWN): 0:(341.0,605.0)
+:Sending Touch (ACTION_UP): 0:(333.60986,604.722)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-5.0)
+Events injected: 500
+:Sending rotation degree=0, persist=false
+:Dropped: keys=0 pointers=0 trackballs=0 flips=0 rotations=0
+## Network stats: elapsed time=6611ms (0ms mobile, 0ms wifi, 6611ms not connected)
+// Monkey finished

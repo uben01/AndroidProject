@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,11 +17,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import utobe.learn2code.R;
 import utobe.learn2code.activity.IAbstractActivity;
+import utobe.learn2code.exception.PersistenceException;
+import utobe.learn2code.model.Language;
+import utobe.learn2code.util.AfterTextChangedWatcher;
 import utobe.learn2code.util.Constants;
 
 public class AddLanguageActivity extends AppCompatActivity implements IAbstractActivity {
@@ -32,7 +31,7 @@ public class AddLanguageActivity extends AppCompatActivity implements IAbstractA
     private Boolean term_text = false;
     private Boolean term_icon = false;
     private Uri uploadIconUri;
-    private Activity gThis = this;
+    private final Activity gThis = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +50,7 @@ public class AddLanguageActivity extends AppCompatActivity implements IAbstractA
         EditText et_languageName = findViewById(R.id.et_lang_name);
         button_next = findViewById(R.id.button_add_language_next);
 
-        et_languageName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+        et_languageName.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
@@ -86,25 +77,27 @@ public class AddLanguageActivity extends AppCompatActivity implements IAbstractA
                     .build();
 
             String entry_name = et_languageName.getText().toString();
-            String entry_iconName = entry_name.toLowerCase() + ".svg";
+            String iconName = entry_name.toLowerCase() + ".svg";
             storageRef
-                    .child(entry_iconName)
+                    .child(iconName)
                     .putFile(uploadIconUri, metadata)
                     .addOnSuccessListener(taskSnapshot -> {
-                        Map<String, Object> language = new HashMap<>();
-                        language.put(Constants.LANGUAGE_FIELD_CREATED_BY, entityManager.getLoggedInUser().getUid());
-                        language.put(Constants.LANGUAGE_FIELD_ICON, "/icons/" + entry_iconName);
-                        language.put(Constants.LANGUAGE_FIELD_NAME, entry_name);
-                        language.put(Constants.LANGUAGE_FIELD_PUBLISHED, false);
+                        Language language = Language.buildLanguage(entityManager.getLoggedInUser().getUid(), iconName, entry_name);
 
                         FirebaseFirestore.getInstance()
                                 .collection(Constants.LANGUAGE_ENTITY_SET_NAME)
-                                .add(language)
+                                .add(language.toMap())
                                 .addOnSuccessListener(documentReference -> {
-                                    Intent addTopicIntent = new Intent(gThis, AddTopicActivity.class);
-                                    addTopicIntent.putExtra(Constants.ABSTRACT_ENTITY_ID, documentReference.getId());
+                                    try {
+                                        language.setId(documentReference.getId());
 
-                                    startActivity(addTopicIntent);
+                                        Intent addTopicIntent = new Intent(gThis, AddTopicActivity.class);
+                                        addTopicIntent.putExtra(Constants.ABSTRACT_ENTITY_ID, documentReference.getId());
+
+                                        startActivity(addTopicIntent);
+                                    } catch (PersistenceException e) {
+                                        e.printStackTrace();
+                                    }
                                 });
                     });
         });

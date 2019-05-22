@@ -45,9 +45,12 @@ public class Result extends AbstractEntity {
         return new Result(user, topic);
     }
 
-    public static ArrayList<Result> buildResultsFromDB(QuerySnapshot querySnapshot) throws PersistenceException {
+    public static ArrayList<Result> buildResultsFromDBforTopics(QuerySnapshot querySnapshot, ArrayList<String> topicIds) throws PersistenceException {
         ArrayList<Result> results = new ArrayList<>();
         for (DocumentSnapshot documentSnapshot : querySnapshot) {
+            if (!topicIds.contains(documentSnapshot.getString(Constants.RESULT_FIELD_TOPIC)))
+                continue;
+
             Result res = (Result) EntityManager.getInstance().getEntity(documentSnapshot.getId());
             if (res == null)
                 results.add(new Result(documentSnapshot));

@@ -6,6 +6,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
@@ -18,6 +20,13 @@ public class Language extends AbstractEntity {
     private final Boolean published;
 
     private final ArrayList<Topic> topics = new ArrayList<>();
+
+    private Language(String createdBy, String icon, String name) {
+        this.name = name;
+        this.createdBy = createdBy;
+        this.icon = icon;
+        this.published = false;
+    }
 
     private Language(QueryDocumentSnapshot document) throws PersistenceException {
         super(document.getId());
@@ -53,6 +62,10 @@ public class Language extends AbstractEntity {
         return lan;
     }
 
+    public static Language buildLanguage(String createdBy, String icon, String name) {
+        return new Language(createdBy, icon, name);
+    }
+
     public String getName() {
         return name;
     }
@@ -69,19 +82,21 @@ public class Language extends AbstractEntity {
         return createdBy;
     }
 
-    public void addTopic(Topic topic) {
-        topics.add(topic);
-    }
-
-    public Topic getTopic(int i) {
-        return topics.get(i);
-    }
-
     public void addTopics(Collection<Topic> topics) {
         this.topics.addAll(topics);
     }
 
     public int getTopicCount() {
         return topics.size();
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Constants.LANGUAGE_FIELD_CREATED_BY, createdBy);
+        map.put(Constants.LANGUAGE_FIELD_ICON, icon);
+        map.put(Constants.LANGUAGE_FIELD_NAME, name);
+        map.put(Constants.LANGUAGE_FIELD_PUBLISHED, published);
+
+        return map;
     }
 }

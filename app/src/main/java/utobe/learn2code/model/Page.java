@@ -6,16 +6,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import utobe.learn2code.exception.PersistenceException;
 import utobe.learn2code.util.Constants;
 import utobe.learn2code.util.EntityManager;
 
 public class Page extends AbstractEntity {
-    private final String title;
-    private final String text;
-    private final String parent;
-    private final Long serialNumber;
+    final String title;
+    final String text;
+    final String parent;
+    Long serialNumber;
 
     private Double subResult = 0.0;
 
@@ -32,6 +34,13 @@ public class Page extends AbstractEntity {
         ((Topic) entityManager.getEntity(parent)).addPage(this);
     }
 
+    Page(String parent, String title, String text, Long serialNumber) {
+        this.parent = parent;
+        this.title = title;
+        this.text = text;
+        this.serialNumber = serialNumber;
+    }
+
     public static ArrayList<Page> buildPagesFromDB(QuerySnapshot documents) throws PersistenceException {
         ArrayList<Page> pages = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
@@ -43,6 +52,10 @@ public class Page extends AbstractEntity {
         }
 
         return pages;
+    }
+
+    public static Page buildPage(String parent, String title, String text, Long serialNumber) {
+        return new Page(parent, title, text, serialNumber);
     }
 
     public String getTitle() {
@@ -67,6 +80,16 @@ public class Page extends AbstractEntity {
 
     public void setSubResult(Double subResult) {
         this.subResult = subResult;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Constants.PAGE_FIELD_PARENT, parent);
+        map.put(Constants.PAGE_FIELD_TEXT, text);
+        map.put(Constants.PAGE_FIELD_TITLE, title);
+        map.put(Constants.PAGE_FIELD_SERIAL_NUMBER, serialNumber);
+
+        return map;
     }
 }
 

@@ -47,7 +47,8 @@ public class LanguageSelectAdapter extends
             holder.notPublishedView.setVisibility(View.VISIBLE);
         }
         holder.titleView.setText(mData.get(position).getName());
-        FirebaseStorage.getInstance().getReference(mData.get(position).getIcon())
+        FirebaseStorage.getInstance().getReference("icons/")
+                .child(mData.get(position).getIcon())
                 .getBytes(1024 * 5)
                 .addOnSuccessListener(bytes -> {
                     try {
