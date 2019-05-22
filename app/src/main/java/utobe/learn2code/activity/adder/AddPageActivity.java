@@ -1,9 +1,7 @@
 package utobe.learn2code.activity.adder;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.FrameLayout;
 
 import utobe.learn2code.R;
 import utobe.learn2code.activity.IAbstractActivity;
@@ -22,11 +20,9 @@ public class AddPageActivity extends AppCompatActivity implements IAbstractActiv
         Bundle extras = getIntent().getExtras();
         topic = (Topic) entityManager.getEntity(extras.getString(Constants.ABSTRACT_ENTITY_ID));
 
-        FrameLayout frameLayout = findViewById(R.id.fr_add_page);
         if (topic.getTest()) {
-            Fragment fragment = new TestAdderFragment();
-            //FragmentTransaction ft = ;
-
+            TestAdderFragment fragment = TestAdderFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().add(R.id.fr_add_page, fragment).commit();
         }
     }
 }

@@ -7,64 +7,47 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import utobe.learn2code.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TestAdderFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TestAdderFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TestAdderFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    CheckBox[] checkBoxes = new CheckBox[4];
+    EditText[] editTexts = new EditText[4];
 
     public TestAdderFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TestAdderFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TestAdderFragment newInstance(String param1, String param2) {
+    public static TestAdderFragment newInstance() {
         TestAdderFragment fragment = new TestAdderFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        checkBoxes[0] = container.findViewById(R.id.cb_test_adder_0);
+        checkBoxes[1] = container.findViewById(R.id.cb_test_adder_1);
+        checkBoxes[2] = container.findViewById(R.id.cb_test_adder_2);
+        checkBoxes[3] = container.findViewById(R.id.cb_test_adder_3);
+        editTexts[0] = container.findViewById(R.id.et_test_adder_0);
+        editTexts[1] = container.findViewById(R.id.et_test_adder_1);
+        editTexts[2] = container.findViewById(R.id.et_test_adder_2);
+        editTexts[3] = container.findViewById(R.id.et_test_adder_3);
+
         return inflater.inflate(R.layout.fragment_test_adder, container, false);
     }
 
@@ -92,16 +75,6 @@ public class TestAdderFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
